@@ -12,6 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bank-showcase" options="-parameters" />
       <module name="config-server" options="-parameters" />
     </option>
   </component>
