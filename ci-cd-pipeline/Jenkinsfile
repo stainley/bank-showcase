@@ -1,0 +1,91 @@
+pipeline {
+    agent any
+
+    tools {
+        // Define the tools needed
+        maven 'Maven_3.8.6'
+        jdk 'jdk-21'
+    }
+
+    environment {
+        DOCKER_HUB_REPO = "your-dockerhub-repo"
+        SONARQUBE_SERVER = 'SonarQube'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Clone the repository
+                git url: 'https://github.com/your-repo/tdbank-showcase.git', branch: 'main'
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                script {
+                    // Build the project using Maven
+                    sh 'mvn clean install'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Run unit tests
+                    sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Code Analysis with SonarQube') {
+            steps {
+                script {
+                    // Run SonarQube analysis
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'mvn sonar:sonar'
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    // Build Docker images for microservices
+                    sh "docker build -t ${DOCKER_HUB_REPO}/user-service ./user-service"
+                    sh "docker build -t ${DOCKER_HUB_REPO}/account-service ./account-service"
+                    sh "docker build -t ${DOCKER_HUB_REPO}/transaction-service ./transaction-service"
+                }
+            }
+        }
+
+        stage('Push Docker Images to DockerHub') {
+            steps {
+                script {
+                    // Push Docker images to DockerHub
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    sh "docker push ${DOCKER_HUB_REPO}/user-service"
+                    sh "docker push ${DOCKER_HUB_REPO}/account-service"
+                    sh "docker push ${DOCKER_HUB_REPO}/transaction-service"
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes (Optional)') {
+            steps {
+                script {
+                    // Deploy to Kubernetes (Optional)
+                    sh 'kubectl apply -f k8s/deployment.yaml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Always clean up Docker containers after the build
+            sh 'docker system prune -f'
+        }
+    }
+}

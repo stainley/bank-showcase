@@ -6,6 +6,12 @@
       <list>
         <option value="$PROJECT_DIR$/config-server/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/discovery-server/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway-server/pom.xml" />
+        <option value="$PROJECT_DIR$/account-service/pom.xml" />
+        <option value="$PROJECT_DIR$/transaction-service/pom.xml" />
+        <option value="$PROJECT_DIR$/kafka-config/pom.xml" />
+        <option value="$PROJECT_DIR$/monitoring/pom.xml" />
       </list>
     </option>
   </component>

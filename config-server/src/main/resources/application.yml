@@ -1,0 +1,19 @@
+server:
+  port: 8888
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/your-username/your-config-repo.git
+          clone-on-start: true
+          default-label: main
+          search-paths: config
+      discovery:
+        enabled: true
+  application:
+    name: config-server
+  security:
+    user:
+      name: config-user
+      password: config-password
