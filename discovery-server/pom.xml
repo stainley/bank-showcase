@@ -12,6 +12,10 @@
     <name>discovery-server</name>
     <description>discovery-server</description>
 
+    <properties>
+        <sonar.exclusions>**/DiscoveryServerApplication.java,**/config/*</sonar.exclusions>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
