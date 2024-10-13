@@ -36,7 +36,8 @@
         <sonar.projectKey>bank-showcase</sonar.projectKey>
         <sonar.projectName>Bank Showcase</sonar.projectName>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.token>sqp_5ff677ae2d35ea6402948dc01e0672f5f814702e</sonar.token>
+        <!--<sonar.token>sqp_5ff677ae2d35ea6402948dc01e0672f5f814702e</sonar.token> -->
+        <sonar.token>squ_5147942369d76b6b1a2655242fd1df524d388a24</sonar.token>
         <sonar.projectVersion>${project.version}</sonar.projectVersion>
         <sonar.scm.provider>git</sonar.scm.provider>
         <sonar.language>java</sonar.language>
@@ -68,6 +69,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
+            <version>1.19.8</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
