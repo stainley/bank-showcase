@@ -8,7 +8,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-@Component
+//@Component
 public class JwtAuthenticationFilter implements WebFilter {
 
     private static final String SECRET_KEY = "secret";

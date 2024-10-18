@@ -5,6 +5,10 @@ spring:
   application:
     name: gateway-server
   security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081 # user-service pointer
     user:
       name: admin
       password: admin
@@ -44,7 +48,6 @@ spring:
                 key-resolver: '#{@userKeyResolver}'
                 redis-rate-limiter.replenishRate: 5
                 redis-rate-limiter.burstCapacity: 10
-
     loadbalancer:
       retry:
         enabled: true

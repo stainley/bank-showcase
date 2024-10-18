@@ -3,6 +3,25 @@ server:
 spring:
   application:
     name: user-service
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: your-google-client-id
+            client-secret: your-google-client-secret
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: http:/localhost:8081/login/oauth2/code/google
+            client-name: Google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
   datasource:
     driver-class-name: org.postgresql.Driver
     username: your_username
@@ -27,4 +46,10 @@ management:
         include: health, info
   security:
     enabled: false
+jwt:
+  secret: Z2NlNjM5MGQ3MjE5NDI3YTUyMzIxNTI2Y2Y0NWU2NzI=
+  access:
+    expiration: 604800000
+  refresh:
+    expiration: 604800000
 

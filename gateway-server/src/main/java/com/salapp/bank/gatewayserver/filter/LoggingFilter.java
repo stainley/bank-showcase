@@ -47,6 +47,6 @@ public class LoggingFilter extends AbstractGatewayFilterFactory<LoggingFilter.Co
     }
 
     public static class Config {
-        // Config properties can be added here, if needed
+
     }
 }
