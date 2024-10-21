@@ -1,5 +1,6 @@
 package com.salapp.bank.userservice.service;
 
+import com.salapp.bank.userservice.exception.DuplicateUserException;
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.payload.SignUpRequest;
 import com.salapp.bank.userservice.repository.UserRepository;
@@ -39,7 +40,7 @@ public class UserService {
     @Transactional
     public User registerNewUser(SignUpRequest signUpRequest) {
         if (userRepository.findByEmail(signUpRequest.email()).isPresent()) {
-            throw new IllegalArgumentException("Email address already in use");
+            throw new DuplicateUserException("Email address already in use");
         }
 
         User user = new User(

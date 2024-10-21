@@ -10,10 +10,20 @@ import java.time.LocalDateTime;
 @Getter
 public class ErrorResponse {
 
-    private String errorCode;
-    private String message;
-    private String details;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime timestamp;
+    private int status; // HTTP status code
+    private String error; // Error name (for example, Conflict)
+    private String message; // General message about what went wrong
+    private Details details; // Nested object for detailed error description
+    private String suggestions; // Suggestions for the user
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private LocalDateTime timestamp; // Timestamp of the error
+
+    @Builder
+    @Getter
+    public static class Details {
+        private String reason; // Reason for the error (for example, Duplicate Entry)
+        private String field;  // The field that caused the error (for example, email)
+        private String description; // Detailed description of the issue
+    }
 }

@@ -1,6 +1,11 @@
 package com.salapp.bank.gatewayserver.exception;
 
-public class UnauthorizedException extends Exception {
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class UnauthorizedException extends RuntimeException {
 
     public UnauthorizedException(String invalidJwtToken) {
         super(invalidJwtToken);

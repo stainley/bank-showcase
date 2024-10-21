@@ -2,19 +2,17 @@ package com.salapp.bank.userservice.controller;
 
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.service.UserService;
-import jakarta.annotation.security.RolesAllowed;
-import org.springframework.context.annotation.Role;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Security;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -50,8 +48,20 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> testUserService() {
+
+        log.info("User invoked this service");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("User Service tested");
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @GetMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> testAdminService() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Admin Service tested");
+    }
+
 }

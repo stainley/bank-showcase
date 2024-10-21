@@ -1,47 +1,108 @@
 package com.salapp.bank.gatewayserver.filter;
 
 import com.salapp.bank.gatewayserver.exception.UnauthorizedException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import com.salapp.bank.gatewayserver.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
 
-import java.util.Date;
 
-//@Component
-public class AuthenticationFilter implements WebFilter {
+@Component
+public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
-    //@Autowired
-    //private OAuth2AuthorizedGrantTypes authorizedGrantTypes;
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 
+    private final RouteValidator validator;
+
+    private final JwtUtil jwtUtil;
+
+    public AuthenticationFilter(RouteValidator validator, JwtUtil jwtUtil) {
+        super(Config.class);
+        this.validator = validator;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        ServerHttpRequest request = exchange.getRequest();
-        String token = request.getHeaders().getFirst("Authorization");
+    public GatewayFilter apply(Config config) {
+        return (exchange, chain) -> {
 
-        if (token != null && token.startsWith("Bearer ")) {
-            String jwt = token.substring(7);
-            try {
-                Jws<Claims> claims = Jwts.parserBuilder()
-                        .setSigningKey("secret-key")
-                        .build().parseClaimsJws(jwt);
+            ServerHttpRequest request = exchange.getRequest();
 
-                if (claims.getBody().getExpiration().before(new Date())) {
-                    return Mono.error(new Exception("Expired JWT token"));
+            // Log the incoming request
+            log.info("Processing request: {}", request.getURI());
+
+            // Check if the route requires authentication
+            if (validator.isSecured.test(request)) {
+
+                // Check if the Authorization header is present
+                String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+                if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                    log.error("Missing or invalid Authorization header: {}", authHeader);
+                    throw new UnauthorizedException("Unauthorized: Missing or Invalid Authorization Header");
                 }
-            } catch (Exception e) {
-                return Mono.error(new UnauthorizedException("Invalid JWT token"));
+
+                // Extract JWT token from the Authorization header
+                String token = authHeader.substring(7);
+
+                try {
+                    // Validate the JWT token
+                    jwtUtil.validateToken(token);
+
+                    // Extract the username from the JWT and add it to the request headers
+                    String username = jwtUtil.extractUsername(token);
+                    ServerHttpRequest mutatedRequest = request.mutate()
+                            .header("loggedInUser", username)
+                            .build();
+
+                    log.info("Token validated successfully. Logged in user: {}", username);
+
+                    // Proceed with the filter chain using the mutated request
+                    return chain.filter(exchange.mutate().request(mutatedRequest).build());
+
+                } catch (Exception e) {
+                    log.error("Invalid access token", e);
+                    throw new UnauthorizedException("Unauthorized: Invalid Access Token");
+                }
             }
-        } else {
-            return Mono.error(new UnauthorizedException("Missing token"));
+
+            // If the route does not require authentication, proceed without modification
+            return chain.filter(exchange);
+        };
+    }
+
+
+    public static class Config {
+
+        private boolean logRequests;
+        private boolean logErrors;
+
+        // Getters and setters for the config properties
+        public boolean isLogRequests() {
+            return logRequests;
         }
 
-        return chain.filter(exchange);
+        public void setLogRequests(boolean logRequests) {
+            this.logRequests = logRequests;
+        }
+
+        public boolean isLogErrors() {
+            return logErrors;
+        }
+
+        public void setLogErrors(boolean logErrors) {
+            this.logErrors = logErrors;
+        }
+
+        @Override
+        public String toString() {
+            return "Config{" +
+                    "logRequests=" + logRequests +
+                    ", logErrors=" + logErrors +
+                    '}';
+        }
     }
 }
