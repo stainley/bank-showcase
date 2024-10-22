@@ -1,29 +1,28 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
+# Step-based approach for small tasks
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
 
+# Multi-stage pipeline starts here
 stages:
   - stage: Build_Account_Service
     jobs:
       - job: Build
+        pool:
+          vmImage: 'ubuntu-latest'
         steps:
           - task: Maven@3
             inputs:
-              mavenFromFile: 'account-service/pom.xml'
+              mavenPomFile: 'account-service/pom.xml'
               goals: 'clean test'
