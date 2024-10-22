@@ -31,7 +31,7 @@ stages:
               versionSpec: '21'
               jdkArchitectureOption: 'x64'
               jdkSourceOption: 'PreInstalled' # Use PreInstalled option or 'AzureStorage' if using custom JDK from storage
-          - task: Maven@3
+          - task: Maven@3.8.9
             inputs:
               mavenPomFile: 'account-service/pom.xml'
               goals: 'clean test'
