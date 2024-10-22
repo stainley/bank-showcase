@@ -1,0 +1,14 @@
+request:
+  method: GET
+  url: /accounts/{accountId}
+  headers:
+    Content-Type: application/json
+
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+  body:
+    id: 1
+    name: "John Smith"
+    email: "johnsmith@mail.com"
