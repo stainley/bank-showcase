@@ -4,18 +4,22 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-# Step-based approach for small tasks
-steps:
-  - script: echo Hello, world!
-    displayName: 'Run a one-line script'
-
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: 'Run a multi-line script'
-
-# Multi-stage pipeline starts here
+# Define multi-stage pipeline
 stages:
+  - stage: InitialSetup
+    jobs:
+      - job: HelloWorld
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: echo Hello, world!
+            displayName: 'Run a one-line script'
+
+          - script: |
+              echo Add other tasks to build, test, and deploy your project.
+              echo See https://aka.ms/yaml
+            displayName: 'Run a multi-line script'
+
   - stage: Build_Account_Service
     jobs:
       - job: Build
