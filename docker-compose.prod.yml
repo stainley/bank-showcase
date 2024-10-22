@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  config-server:
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  discovery-server:
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  gateway-server:
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  user-service:
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/userdb_prod
+
+  transaction-service:
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  user-db:
+    environment:
+      POSTGRES_DB: userdb_prod
+      POSTGRES_USER: prod_user
+      POSTGRES_PASSWORD: prod_password
+
+  kafka:
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,EXTERNAL://prod-broker:9092
+
+  zookeeper:
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=no

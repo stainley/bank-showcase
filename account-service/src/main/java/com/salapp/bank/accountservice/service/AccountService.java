@@ -28,12 +28,7 @@ public class AccountService {
         Account account = accountRequest.mapToAccount();
         Account accountCreated = accountRepository.save(account);
 
-        return AccountResponse.builder()
-                .id(accountCreated.getId())
-                .accountType(accountCreated.getAccountType())
-                .balance(accountCreated.getBalance())
-                .id(accountCreated.getId())
-                .build();
+        return null;
     }
 
     @Transactional(readOnly = true)
@@ -43,12 +38,7 @@ public class AccountService {
 
         Account accountFound = accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("" + accountId));
 
-        return AccountResponse.builder()
-                .id(accountFound.getId())
-                .accountType(accountFound.getAccountType())
-                .balance(accountFound.getBalance())
-                .id(accountFound.getId())
-                .build();
+        return null;
 
     }
 

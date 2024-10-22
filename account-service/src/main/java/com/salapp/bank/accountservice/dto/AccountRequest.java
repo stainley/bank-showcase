@@ -7,6 +7,6 @@ import java.math.BigDecimal;
 public record AccountRequest(Long id, Long userId, String accountType, BigDecimal balance) {
 
     public Account mapToAccount() {
-        return new Account(id, userId, accountType, balance);
+        return null;
     }
 }

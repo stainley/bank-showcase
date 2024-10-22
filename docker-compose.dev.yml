@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  config-server:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  discovery-server:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  gateway-server:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  user-service:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/userdb_dev
+
+  transaction-service:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  user-db:
+    environment:
+      POSTGRES_DB: userdb_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+
+  kafka:
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+
+  zookeeper:
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
