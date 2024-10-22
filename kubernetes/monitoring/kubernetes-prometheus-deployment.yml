@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 100m
+              storage: 5Gi
+            limits:
+              memory: 1024Mi
+              cpu: 200m
+              storage: 1Gi
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - mountPath: /etc/prometheus/prometheus.yml
+              name: prometheus-config
+              subPath: prometheus.yml
+            - mountPath: /prometheus-data
+              name: prometheus-data
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-configmap
+        - name: prometheus-data
+          persistentVolumeClaim:
+            claimName: prometheus-data-pvc
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-configmap
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: 'kubernetes'
+        kubernetes_sd_configs:
+          - role: pod
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

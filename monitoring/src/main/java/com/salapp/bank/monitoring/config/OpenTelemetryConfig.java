@@ -10,5 +10,6 @@ public class OpenTelemetryConfig {
     @Bean
     public OpenTelemetry openTelemetrySdk() {
 
+        return null;
     }
 }

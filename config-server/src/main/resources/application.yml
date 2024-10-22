@@ -1,19 +1,25 @@
 server:
   port: 8888
 spring:
+  application:
+    name: config-server
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/your-username/your-config-repo.git
+          uri: https://github.com/stainley/bank-showcase.git
           clone-on-start: true
           default-label: main
           search-paths: config
       discovery:
         enabled: true
-  application:
-    name: config-server
   security:
     user:
       name: config-user
       password: config-password
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

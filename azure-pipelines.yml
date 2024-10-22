@@ -17,3 +17,13 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+stages:
+  - stage: Build_Account_Service
+    jobs:
+      - job: Build
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenFromFile: 'account-service/pom.xml'
+              goals: 'clean test'

@@ -78,7 +78,7 @@ To get started with this project, you need the following installed on your machi
 
 ## 📂 Project Structure
 
-- ```image
+- ```yaml
     bank-showcase/
         │
         ├── config-server/             # Centralized configuration service
