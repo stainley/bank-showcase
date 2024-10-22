@@ -21,12 +21,18 @@ stages:
             displayName: 'Run a multi-line script'
 
   - stage: Build_Account_Service
+
     jobs:
       - job: Build
         pool:
           vmImage: 'ubuntu-latest'
         steps:
+          - task: UseJavaVersion@1
+            inputs:
+              versionSpec: '21'
+              jdkArchitectureOption: 'x64'
           - task: Maven@3
             inputs:
               mavenPomFile: 'account-service/pom.xml'
               goals: 'clean test'
+              options: '-Dmaven.compiler.release=21'
