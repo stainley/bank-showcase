@@ -7,14 +7,14 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - SPRING_BOOT_PROFILE=docker
-      - DATABASE_URL=jdbc:postgresql://localhost:5432/account_db
+      - SPRING_BOOT_PROFILE=prod
+      - DATABASE_URL=jdbc:postgresql://postgres_account:5432/account_db
       - DATABASE_USERNAME=${POSTGRES_USER}
       - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
     depends_on:
-      - postgres
+      - postgres_account
 
-  postgres:
+  postgres_account:
     image: postgres:latest
     environment:
       POSTGRES_DB: account_db

@@ -3,9 +3,9 @@ package com.salapp.bank.accountservice.service;
 import com.salapp.bank.accountservice.dto.AccountRequest;
 import com.salapp.bank.accountservice.dto.AccountResponse;
 import com.salapp.bank.accountservice.exception.AccountNotFoundException;
-import com.salapp.bank.accountservice.model.Account;
-import com.salapp.bank.accountservice.repository.AccountRepository;
+//import com.salapp.bank.accountservice.repository.AccountRepository;
 
+import com.salapp.bank.common.model.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -19,14 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AccountService {
 
-    private final AccountRepository accountRepository;
+    //private final AccountRepository accountRepository;
 
     @Transactional
     @CacheEvict(value = "accounts", key = "#accountRequest.id")
     @Secured("{ROLE_USER}")
     public AccountResponse createAccount(AccountRequest accountRequest) {
         Account account = accountRequest.mapToAccount();
-        Account accountCreated = accountRepository.save(account);
+        //Account accountCreated = accountRepository.save(account);
 
         return null;
     }
@@ -36,7 +36,7 @@ public class AccountService {
     @Secured({"{ROLE_USER", "ROLE_ADMIN"})
     public AccountResponse getAccount(long accountId) throws AccountNotFoundException {
 
-        Account accountFound = accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("" + accountId));
+        //Account accountFound = accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("" + accountId));
 
         return null;
 

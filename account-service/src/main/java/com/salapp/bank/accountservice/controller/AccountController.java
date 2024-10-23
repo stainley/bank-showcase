@@ -2,7 +2,6 @@ package com.salapp.bank.accountservice.controller;
 
 import com.salapp.bank.accountservice.dto.AccountRequest;
 import com.salapp.bank.accountservice.dto.AccountResponse;
-import com.salapp.bank.accountservice.model.Account;
 import com.salapp.bank.accountservice.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

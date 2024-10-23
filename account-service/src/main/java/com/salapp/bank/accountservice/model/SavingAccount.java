@@ -1,6 +1,7 @@
 package com.salapp.bank.accountservice.model;
 
 import com.salapp.bank.accountservice.exception.InsufficientBalanceException;
+import com.salapp.bank.common.model.Account;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
