@@ -3,9 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.salapp.bank</groupId>
-        <artifactId>bank-showcase</artifactId>
-        <version>0.0.1</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <artifactId>account-service</artifactId>
@@ -13,18 +14,16 @@
     <name>account-service</name>
     <description>account-service</description>
 
-    <repositories>
+    <distributionManagement>
         <repository>
-            <id>apache.snapshots</id>
-            <url>https://repository.apache.org/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>nexus-releases</id>
+            <url>http://localhost:8099/repository/maven-releases/</url>
         </repository>
-    </repositories>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://localhost:8099/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <java.version>21</java.version>
@@ -39,25 +38,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -111,11 +110,6 @@
             <artifactId>spring-web-test-client</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-contract-verifier</artifactId>
-            <scope>test</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.springframework.restdocs</groupId>
             <artifactId>spring-restdocs-webtestclient</artifactId>
@@ -191,16 +185,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- <plugin>
-                 <groupId>org.springframework.cloud</groupId>
-                 <artifactId>spring-cloud-contract-maven-plugin</artifactId>
-                 <version>4.1.4</version>
-                 <extensions>true</extensions>
-                 <configuration>
-                     <testFramework>JUNIT5</testFramework>
-                     <testMode>WEBTESTCLIENT</testMode>
-                 </configuration>
-             </plugin>-->
+
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>

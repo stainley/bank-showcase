@@ -1,24 +1,20 @@
 package com.salapp.bank.accountservice;
 
-import com.netflix.discovery.EurekaClientConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClientConfiguration;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.context.ApplicationContext;
 
-
-@Import(TestcontainersConfiguration.class)
 @SpringBootTest
-@EnableAutoConfiguration
 class AccountServiceApplicationTests {
+
+    @Autowired
+    ApplicationContext applicationContext;
 
     @Test
     void contextLoads() {
-        Assertions.assertTrue(true);
+        Assertions.assertNotNull(applicationContext);
     }
 
 }

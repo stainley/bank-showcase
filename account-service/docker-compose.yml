@@ -3,6 +3,7 @@ services:
   account-service:
     container_name: account-service
     build:
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8083:8083"

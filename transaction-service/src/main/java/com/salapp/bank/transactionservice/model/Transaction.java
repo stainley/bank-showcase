@@ -1,10 +1,12 @@
 package com.salapp.bank.transactionservice.model;
 
+
 import com.salapp.bank.common.model.Account;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -27,13 +29,15 @@ public class Transaction {
     @Field("transaction_type")
     TransactionType transactionType;
 
+    @DBRef
     @Field("source_account")
     private Account sourceAccount;
 
+    @DBRef
     @Field("destination_account")
     private Account destinationAccount;
 
-    @Field("transaction_date")
+    @Field(value = "transaction_date")
     private LocalDateTime transactionDate;
 
     public Transaction(BigDecimal amount, TransactionType transactionType, Account sourceAccount, Account destinationAccount, LocalDateTime transactionDate) {

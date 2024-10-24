@@ -1,3 +1,4 @@
+
 server:
   port: 8081
 spring:
@@ -25,12 +26,17 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: your_username
-    password: your_password
+    password: ${DB_PASSWORD:your_password}
     url: jdbc:postgresql://localhost:5432/userdb
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    activate:
+      on-profile: dev
+  profiles:
+    active:
 eureka:
   client:
     service-url:

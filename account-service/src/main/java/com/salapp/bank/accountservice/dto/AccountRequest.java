@@ -1,6 +1,5 @@
 package com.salapp.bank.accountservice.dto;
 
-
 import com.salapp.bank.common.model.Account;
 
 import java.math.BigDecimal;
