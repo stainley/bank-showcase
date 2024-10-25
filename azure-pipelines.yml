@@ -44,7 +44,7 @@ stages:
               codeCoverageTool: JaCoCo
               summaryFileLocation: '$(System.DefaultWorkingDirectory)/account-service/target/site/jacoco/jacoco.xml'
               reportDirectory: '$(System.DefaultWorkingDirectory)/account-service/target/site/jacoco'
-  - stage: Build User-Service
+  - stage: Build_User_Service
     jobs:
       - job: Build
         pool:
