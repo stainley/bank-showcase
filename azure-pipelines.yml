@@ -6,19 +6,16 @@ pool:
 
 # Define multi-stage pipeline
 stages:
-  - stage: InitialSetup
+  - stage: Build_Shared_Service
     jobs:
-      - job: HelloWorld
+      - job: BuildSharedService
         pool:
           vmImage: 'ubuntu-latest'
         steps:
-          - script: echo Hello, world!
-            displayName: 'Run a one-line script'
-
-          - script: |
-              echo Add other tasks to build, test, and deploy your project.
-              echo See https://aka.ms/yaml
-            displayName: 'Run a multi-line script'
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'shared-service/pom.xml'
+              goals: 'clean install'
 
   - stage: Build_Account_Service
     jobs:
