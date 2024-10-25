@@ -15,7 +15,7 @@
     </properties>
 
     <distributionManagement>
-        <repository>
+        <!--<repository>
             <id>nexus</id>
             <name>Releases</name>
             <url>http://localhost:8099/repository/maven-releases</url>
@@ -24,8 +24,30 @@
             <id>nexus</id>
             <name>Snapshot</name>
             <url>http://localhost:8099/repository/maven-snapshots</url>
-        </snapshotRepository>
+        </snapshotRepository>-->
+        <repository>
+            <id>bank-showcase</id>
+            <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </distributionManagement>
+    <repositories>
+        <repository>
+            <id>bank-showcase</id>
+            <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
