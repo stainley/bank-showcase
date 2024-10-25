@@ -25,7 +25,30 @@
             <name>Snapshot</name>
             <url>http://localhost:8099/repository/maven-snapshots</url>
         </snapshotRepository>-->
+        <repository>
+            <id>bank-showcase</id>
+            <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </distributionManagement>
+    <repositories>
+        <repository>
+            <id>bank-showcase</id>
+            <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 
     <properties>
         <java.version>21</java.version>
@@ -130,7 +153,7 @@
         <dependency>
             <groupId>com.salapp.bank</groupId>
             <artifactId>shared-service</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
         </dependency>
 
         <!--<dependency>
