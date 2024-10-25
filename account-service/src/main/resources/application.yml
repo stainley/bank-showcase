@@ -19,8 +19,8 @@ spring:
     active: dev
   datasource:
     url: jdbc:postgresql://localhost:5544/accountdb_dev
-    username: dev_user
-    password: ${DB_PASSWORD}
+    username: your_name
+    password: your_password
   jpa:
     hibernate:
       ddl-auto: update

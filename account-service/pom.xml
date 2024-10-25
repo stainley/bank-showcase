@@ -15,14 +15,16 @@
     <description>account-service</description>
 
     <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>http://localhost:8099/repository/maven-releases/</url>
+        <!--<repository>
+            <id>nexus</id>
+            <name>Releases</name>
+            <url>http://localhost:8099/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://localhost:8099/repository/maven-snapshots/</url>
-        </snapshotRepository>
+            <id>nexus</id>
+            <name>Snapshot</name>
+            <url>http://localhost:8099/repository/maven-snapshots</url>
+        </snapshotRepository>-->
     </distributionManagement>
 
     <properties>
@@ -38,14 +40,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-postgresql</artifactId>
-        </dependency>
+        <!--        <dependency>
+                    <groupId>org.flywaydb</groupId>
+                    <artifactId>flyway-core</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.flywaydb</groupId>
+                    <artifactId>flyway-database-postgresql</artifactId>
+                </dependency>-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -127,6 +129,12 @@
         </dependency>
         <dependency>
             <groupId>com.salapp.bank</groupId>
+            <artifactId>shared-service</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>com.salapp.bank</groupId>
             <artifactId>common</artifactId>
             <version>1.0.0</version>
             <exclusions>
@@ -135,7 +143,7 @@
                     <artifactId>spring-boot-starter-data-mongodb</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -222,6 +230,18 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.7.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>analyze</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

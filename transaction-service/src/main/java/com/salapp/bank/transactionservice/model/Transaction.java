@@ -1,7 +1,7 @@
 package com.salapp.bank.transactionservice.model;
 
 
-import com.salapp.bank.common.model.Account;
+import com.salapp.bank.shared.model.Account;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

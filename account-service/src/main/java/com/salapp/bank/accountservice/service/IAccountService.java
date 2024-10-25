@@ -1,10 +1,10 @@
 package com.salapp.bank.accountservice.service;
 
-import com.salapp.bank.common.model.Account;
+//import com.salapp.bank.common.model.Account;
 
 import java.util.List;
 
-public interface IAccountService<T extends Account> {
+public interface IAccountService<T> {
 
     T createAccount(T account);
 

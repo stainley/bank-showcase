@@ -17,9 +17,15 @@
 
     <distributionManagement>
         <repository>
-            <id>nexus-releases</id>
-            <url>http://localhost:8099/repository/stainley-repository/</url>
+            <id>nexus</id>
+            <name>Releases</name>
+            <url>http://localhost:8099/repository/maven-releases</url>
         </repository>
+        <snapshotRepository>
+            <id>nexus</id>
+            <name>Snapshot</name>
+            <url>http://localhost:8099/repository/maven-snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
