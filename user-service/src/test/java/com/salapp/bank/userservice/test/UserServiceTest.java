@@ -15,10 +15,10 @@ import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
-    //@Mock
+    @Mock
     private UserRepository userRepository;
 
-    //@InjectMocks
+    @InjectMocks
     private UserService userService;
 
     public UserServiceTest() {
@@ -26,7 +26,7 @@ class UserServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    //@Test
+    @Test
     void testFindUserById() {
         User user = new User();
         user.setId(1L);
@@ -34,11 +34,11 @@ class UserServiceTest {
 
         Optional<User> result = userService.findUserById(1L);
 
-        Assertions.assertThat(result.isPresent()).isTrue();
+        Assertions.assertThat(result).isPresent();
         Assertions.assertThat(result.get().getId()).isEqualTo(1L);
     }
 
-    //@Test
+    @Test
     void testSaveUser() {
         User user = new User();
         user.setFirstName("John");

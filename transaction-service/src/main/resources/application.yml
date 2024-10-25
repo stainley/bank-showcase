@@ -7,6 +7,13 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  data:
+    mongodb:
+      database: mydatabase
+      uri: mongodb://localhost:27017
+      authentication-database: admin
+      username: myuser
+      password: mypassword
 axon:
   eventhandling:
     processors:

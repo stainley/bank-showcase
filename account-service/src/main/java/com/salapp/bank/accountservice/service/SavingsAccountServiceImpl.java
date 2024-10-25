@@ -1,25 +1,36 @@
 package com.salapp.bank.accountservice.service;
 
-import com.salapp.bank.accountservice.dto.AccountRequest;
-import com.salapp.bank.accountservice.dto.AccountResponse;
 import com.salapp.bank.accountservice.model.SavingAccount;
 import com.salapp.bank.accountservice.repository.SavingsAccountRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
 public class SavingsAccountServiceImpl implements IAccountService<SavingAccount> {
 
     private final SavingsAccountRepository savingsAccountRepository;
 
+    public SavingsAccountServiceImpl(SavingsAccountRepository savingsAccountRepository) {
+        this.savingsAccountRepository = savingsAccountRepository;
+    }
+
+
+    @Transactional
+    @CacheEvict(value = "accounts", key = "#account.accountId")
+    @Secured("{ROLE_USER}")
     @Override
     public SavingAccount createAccount(SavingAccount account) {
         return savingsAccountRepository.save(account);
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "accounts", key = "#id")
+    @Secured({"{ROLE_USER", "ROLE_ADMIN"})
     @Override
     public SavingAccount getAccountById(Long id) {
         return savingsAccountRepository.findById(id).orElse(null);
@@ -27,36 +38,14 @@ public class SavingsAccountServiceImpl implements IAccountService<SavingAccount>
 
     @Override
     public List<SavingAccount> getAllAccounts() {
-        return savingsAccountRepository.findAll();
+
+        return List.of();
     }
 
+    @Secured("{ROLE_ADMIN}")
     @Override
     public void deleteAccount(Long id) {
         savingsAccountRepository.deleteById(id);
     }
 
-    @Override
-    public AccountResponse createAccount(AccountRequest account) {
-        return null;
-    }
-
-    @Override
-    public AccountResponse getAccount(String accountId) {
-        return null;
-    }
-
-    @Override
-    public AccountResponse updateAccount(String accountId, AccountRequest account) {
-        return null;
-    }
-
-    @Override
-    public void deleteAccount(String accountId) {
-
-    }
-
-    @Override
-    public List<AccountResponse> getAllAccountsForUser(String userId) {
-        return List.of();
-    }
 }

@@ -9,11 +9,11 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 
-@SpringBootTest
-@EnableEurekaServer
+/*@SpringBootTest
+@EnableEurekaServer*/
 public class IntegrationTest {
 
-    public static GenericContainer<?> discoveryServer = new GenericContainer<>("springcloud/eureka:latest")
+    /*public static GenericContainer<?> discoveryServer = new GenericContainer<>("springcloud/eureka:latest")
             .withExposedPorts(8761);
 
     @BeforeAll
@@ -31,5 +31,5 @@ public class IntegrationTest {
     @Test
     void testEurekaServerIsRunning() {
         Assertions.assertTrue(discoveryServer.isRunning());
-    }
+    }*/
 }

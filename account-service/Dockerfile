@@ -1,20 +1,31 @@
-# Use an official OpenJDK 17 image as the base
-FROM openjdk:21-slim
+# Stage 1: Build
+FROM maven:3.9.4-eclipse-temurin-21-alpine AS builder
 
-# Set environment variables for the Spring Boot profile and database credentials
-ENV SPRING_BOOT_PROFILE=docker \
-    DATABASE_URL=jdbc:postgresql://postgres:5432/account_db \
-    DATABASE_USERNAME=your_name \
-    DATABASE_PASSWORD=your_password
-
-# Set the working directory to /app
 WORKDIR /app
+COPY pom.xml /app/
+COPY src /app/src
+COPY --from=common-library /app/target/common-1.0.0.jar /app/libs/common-1.0.0.jar
 
-# Copy the .jar file into the container
-COPY target/account-service.jar /app/
+RUN mvn clean package -DskipTests -Dmaven.repo.local=/app/libs
 
-# Expose the port
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre-jammy
+
+# Create non-root user and group
+RUN groupadd -r appgroup && useradd -r -g appgroup -m -d /app -s /sbin/nologin appuser
+
+# Switch to non-root user
+USER appuser
+
+# Set environment variables (replace with secure methods)
+ENV DATABASE_URL=${DATABASE_URL}
+ENV DATABASE_USERNAME=${DATABASE_USERNAME}
+ENV DATABASE_NAME=${DATABASE_NAME}
+
+WORKDIR /app
+COPY --from=builder /app/target/account-service-*.jar /app/account-service.jar
+
 EXPOSE 8083
 
-# Run the command to start the Spring Boot application
-CMD ["java", "-jar", "account-service.jar"]
+CMD ["java", "-jar", "/app/account-service.jar"]

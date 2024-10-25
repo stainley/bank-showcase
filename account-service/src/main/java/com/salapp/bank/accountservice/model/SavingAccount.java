@@ -1,8 +1,11 @@
 package com.salapp.bank.accountservice.model;
 
 import com.salapp.bank.accountservice.exception.InsufficientBalanceException;
+
+//import com.salapp.bank.common.model.Account;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -17,8 +20,11 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "savings_accounts")
-public class SavingAccount extends Account {
+public class SavingAccount//        extends Account
+{
 
+    @Id
+    private Long id;
     @DecimalMin(value = "0.0", inclusive = false)
     @Column(name = "interest_rate", nullable = false)
     private BigDecimal interestRate;
@@ -32,27 +38,27 @@ public class SavingAccount extends Account {
     private int withdrawalLimit;
 
     public SavingAccount(Long accountId, String userId, BigDecimal balance, BigDecimal interestRate, BigDecimal minimumBalance, int withdrawalLimit) {
-        super(accountId, userId, balance);
+        //super(accountId, userId, balance);
         this.interestRate = interestRate;
         this.minimumBalance = minimumBalance;
         this.withdrawalLimit = withdrawalLimit;
     }
 
-    @Override
+    /*@Override
     public void deposit(BigDecimal amount) {
         setBalance(getBalance().add(amount));
     }
-
-    @Override
+*/
+    /*@Override
     public void withdraw(BigDecimal amount) {
         if (getBalance().compareTo(amount) >= 0 && getBalance().compareTo(minimumBalance) >= 0) {
             setBalance(getBalance().subtract(amount));
         } else {
             throw new InsufficientBalanceException("Insufficient balance or minimum balance required.");
         }
-    }
+    }*/
 
-    public void accumulateInterest() {
+    /*public void accumulateInterest() {
         setBalance(getBalance().add(interestRate).multiply(interestRate));
-    }
+    }*/
 }
