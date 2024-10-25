@@ -1,6 +1,7 @@
 server:
   port: 8081
 spring:
+
   application:
     name: user-service
   security:
@@ -25,12 +26,16 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: your_username
-    password: your_password
+    password: ${DB_PASSWORD:your_password}
     url: jdbc:postgresql://localhost:5432/userdb
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    activate:
+      on-profile: dev
+
 eureka:
   client:
     service-url:
@@ -53,3 +58,9 @@ jwt:
   refresh:
     expiration: 604800000
 
+---
+# Production Configuration
+spring:
+  config:
+    activate:
+      on-profile: prod

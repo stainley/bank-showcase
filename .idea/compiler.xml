@@ -16,8 +16,12 @@
         <module name="user-service" />
         <module name="account-service" />
         <module name="monitoring" />
+        <module name="shared-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="shared" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -29,6 +33,8 @@
       <module name="gateway-server" options="-parameters" />
       <module name="kafka-config" options="-parameters" />
       <module name="monitoring" options="-parameters" />
+      <module name="shared" options="-parameters" />
+      <module name="shared-service" options="" />
       <module name="transaction-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>

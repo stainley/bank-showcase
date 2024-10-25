@@ -1,15 +1,13 @@
 package com.salapp.bank.userservice.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
-//@Configuration
+@SuppressWarnings("unused")
 public class OAuth2ClientConfig {
 
-    //@Bean
+
     public ClientRegistrationRepository clientRegistrationRepository() {
         ClientRegistration googleRegistration = googleClientRegistration();
         return new InMemoryClientRegistrationRepository(googleRegistration);
@@ -18,7 +16,7 @@ public class OAuth2ClientConfig {
     private ClientRegistration googleClientRegistration() {
         return ClientRegistration.withRegistrationId("google")
                 .clientId("your-google-client-id")
-                .clientSecret("your-google-client-secret")
+                .clientSecret("")
                 .scope("openid", "profile", "email")
                 .authorizationUri("https://accounts.google.com/o/oauth2/auth")
                 .tokenUri("https://oauth2.googleapis.com/token")

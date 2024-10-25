@@ -1,6 +1,8 @@
 package com.salapp.bank.userservice.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,9 +24,15 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotEmpty(message = "Firstname is required")
     private String firstName;
+
+    @NotEmpty(message = "Lastname is required")
     private String lastName;
+
+    @Email(message = "Invalid email")
     private String email;
+
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)

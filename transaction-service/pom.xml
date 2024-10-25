@@ -57,12 +57,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
-  <!--      <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>-->
+        <!--      <dependency>
+                  <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-devtools</artifactId>
+                  <scope>runtime</scope>
+                  <optional>true</optional>
+              </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -81,8 +81,8 @@
         </dependency>
         <dependency>
             <groupId>com.salapp.bank</groupId>
-            <artifactId>common</artifactId>
-            <version>1.0.0</version>
+            <artifactId>shared-service</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>
@@ -122,5 +122,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <bank.profile.active>dev</bank.profile.active>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

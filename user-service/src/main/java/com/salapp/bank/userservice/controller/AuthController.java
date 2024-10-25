@@ -9,6 +9,7 @@ import com.salapp.bank.userservice.security.JwtTokenProvider;
 import com.salapp.bank.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,7 +33,7 @@ public class AuthController implements IAuthController {
 
     private final CustomUserDetailsService customUserDetailsService;
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> registerUser(@Validated @RequestBody final SignUpRequest signUpRequest) {
         User newUser = userService.registerNewUser(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully: " + newUser.getEmail());

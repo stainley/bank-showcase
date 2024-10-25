@@ -2,28 +2,52 @@ package com.salapp.bank.userservice.integration;
 
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-//@SpringBootTest
-//@AutoConfigureMockMvc
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
+@Testcontainers
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
 class UserControllerIntegrationTest {
 
-    //@Autowired
+    private static final PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres:11-alpine")
+            .withDatabaseName("testdb")
+            .withUsername("testuser")
+            .withPassword("testpassword")
+            .withExposedPorts(5432);
+
+    @DynamicPropertySource
+    public static void setDatabaseProperties(DynamicPropertyRegistry registry) {
+        database.start();
+        registry.add("spring.datasource.url", () -> "jdbc:postgresql://" + database.getHost() + ":" + database.getFirstMappedPort() + "/testdb");
+        registry.add("spring.datasource.username", database::getUsername);
+        registry.add("spring.datasource.password", database::getPassword);
+    }
+
+    @Autowired
     private MockMvc mockMvc;
 
-    //@Autowired
+    @Autowired
     private UserRepository userRepository;
 
-    //@BeforeEach
+    @BeforeEach
     void setup() {
         userRepository.deleteAll();
         User user = new User();
@@ -33,30 +57,28 @@ class UserControllerIntegrationTest {
         userRepository.save(user);
     }
 
-    //@Test
+    @WithMockUser(username = "testuser")
+    @Test
     void testGetAllUsers() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstname").value("Jane"))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("Jane"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
-    //@Test
-    void testCreateUser() throws Exception {
-        String userJson = """
-                {
-                    "firstname": "Jane",
-                    "lastname": "Doe",
-                    "email": "jane.doe@example.com",
-                }
-                """;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstname").value("Jane"))
+    @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    @Test
+    void testDeleteUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/1")
+                        .with(csrf()))
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
                 .andDo(MockMvcResultHandlers.print());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 }
