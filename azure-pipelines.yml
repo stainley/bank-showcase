@@ -39,7 +39,7 @@ stages:
               mavenPomFile: 'account-service/pom.xml'
               goals: 'clean verify'
               options: '-Dmaven.compiler.release=21'
-          - task: PublishCodeCoverageResults@1
+          - task: PublishCodeCoverageResults@2
             inputs:
               codeCoverageTool: JaCoCo
               summaryFileLocation: '$(System.DefaultWorkingDirectory)/account-service/target/site/jacoco/jacoco.xml'
@@ -60,8 +60,8 @@ stages:
               mavenPomFile: 'user-service/pom.xml'
               goals: 'clean verify'
               options: '-Dmaven.compiler.release=21'
-          - task: PublishCodeCoverageResults@1
+          - task: PublishCodeCoverageResults@2
             inputs:
               codeCoverageTool: JaCoCo
-              summaryFileLocation: '$(System.DefaultWorkingDirectory)/account-service/target/site/jacoco/jacoco.xml'
-              reportDirectory: '$(System.DefaultWorkingDirectory)/account-service/target/site/jacoco'
+              summaryFileLocation: '$(System.DefaultWorkingDirectory)/user-service/target/site/jacoco/jacoco.xml'
+              reportDirectory: '$(System.DefaultWorkingDirectory)/user-service/target/site/jacoco'
