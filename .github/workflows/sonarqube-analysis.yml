@@ -63,9 +63,10 @@ jobs:
           $retryCount = 0
           
           $Headers = @{
-            Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$env:SONAR_TOKEN"))
+            Authorization = "Bearer $env:SONAR_TOKEN"
           }
-  
+
+
           Write-Host "Header is: $Headers"
           Write-Host "${env:$SONAR_TOKEN}"
           
