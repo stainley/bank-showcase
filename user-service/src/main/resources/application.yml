@@ -57,7 +57,9 @@ jwt:
     expiration: 604800000
   refresh:
     expiration: 604800000
-
+logging:
+  level:
+    root: error
 ---
 # Production Configuration
 spring:
