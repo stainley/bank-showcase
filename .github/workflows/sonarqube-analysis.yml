@@ -53,16 +53,23 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: 'http://localhost:9000'
         run: |
-          # Wait for the analysis to complete
-          sleep 30
-          # Query the SonarQube API to get the quality gate status
-          $response = curl -s -u "$env:SONAR_TOKEN:" "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
-
-          # Parse the JSON response in PowerShell
-          $json = $response | ConvertFrom-Json
-          $quality_gate_status = $json.projectStatus.status
-
-          Write-Host "Quality Gate Status: $quality_gate_status"
+          # Initialize the status variable
+          $quality_gate_status = "PENDING"
+          
+          # Poll for the quality gate status
+          while ($quality_gate_status -eq "PENDING") {
+              # Query the SonarQube API to get the quality gate status
+              $response = curl -s -u "$env:SONAR_TOKEN:" "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
+          
+              # Parse the JSON response in PowerShell
+              $json = $response | ConvertFrom-Json
+              $quality_gate_status = $json.projectStatus.status
+          
+              Write-Host "Quality Gate Status: $quality_gate_status"
+          
+              # Wait for a few seconds before the next check
+              Start-Sleep -Seconds 10  # Adjust the sleep time as needed
+          }
 
           if ($quality_gate_status -ne "OK") {
               Write-Host "Quality Gate failed"
