@@ -160,4 +160,13 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>unit-test</id>
+
+        </profile>
+        <profile>
+            <id>integration-test</id>
+        </profile>
+    </profiles>
 </project>
