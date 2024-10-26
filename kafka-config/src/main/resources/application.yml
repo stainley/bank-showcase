@@ -13,3 +13,6 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     template:
       default-topic: bank-topic
+logging:
+  level:
+    org.apache.kafka: error

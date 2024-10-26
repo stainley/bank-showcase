@@ -1,0 +1,50 @@
+name: SonarQube Analysis on Self-Hosted Runner
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  sonarQubeAnalysis:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+
+      #- name: Run Unit Tests
+      #  run: |
+      #    mvn test -Punit-test  # Profile for unit tests (adjust as needed)
+      #  continue-on-error: false # Fail the job if unit tests fail
+
+      #- name: Run Integration Tests
+      #  run: |
+      #    mvn verify -Pintegration-test # Profile for integration tests (adjust as needed)
+      #  continue-on-error: false # Fail the job if integration tests fail
+
+      - name: Run SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: 'http://localhost:9000' # Adjust to your SonarQube local URL if necessary
+        run: |
+          mvn clean verify sonar:sonar -D'sonar.projectKey=bank-showcase' -D'sonar.login'=$SONAR_TOKEN -D'sonar.host.url=http://localhost:9000'
+            
+
