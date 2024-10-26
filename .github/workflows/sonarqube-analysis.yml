@@ -71,13 +71,14 @@ jobs:
 
           # Poll for the quality gate status
           while ($quality_gate_status -eq "PENDING" -and $retryCount -lt $maxRetries) {
+          
               # Query the SonarQube API to get the quality gate status
               $url = "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
               Write-Host "HOST URL = $url"
 
               try {
                   # Get the raw response using Invoke-RestMethod
-                  $response = Invoke-RestMethod -Uri $url -Headers $Headers -ErrorAction Stop
+                  $response = curl -H "Authorization: Bearer $env:SONAR_TOKEN" $url
 
                   Write-Host "Raw API Response: $response"
 
