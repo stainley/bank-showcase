@@ -72,21 +72,27 @@ jobs:
               # Query the SonarQube API to get the quality gate status
               Write-Host "HOST URL = $env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
           
-              $response = Invoke-RestMethod -Uri "http://localhost:9000/api/qualitygates/project_status?projectKey=bank-showcase" -Headers $Headers          
+              try {
+                  # Get the raw response
+                  $response = Invoke-RestMethod -Uri "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase" -Headers $Headers -ErrorAction Stop
+                  Write-Host "Raw API Response: $response"
           
-              # Print the raw response for debugging
-              Write-Host "Raw API Response: $response"
+                  # Check if response is in JSON format
+                  if ($response -is [System.Collections.IDictionary]) {
+                    $json = $response | ConvertFrom-Json
+                    $quality_gate_status = $json.projectStatus.status
+                    Write-Host "Quality Gate Status: $quality_gate_status"
+                  } else {
+                    Write-Host "Response was not in JSON format as expected."
+                    exit 1
+                  }
+            } catch {
+              Write-Host "Error encountered: $_"
+              exit 1
+            }
           
-              # Parse the JSON response in PowerShell
-              $json = $response | ConvertFrom-Json
-
-              Write-Host "Project Status $json"
-              $quality_gate_status = $json.projectStatus.status
-          
-              Write-Host "Quality Gate Status: $quality_gate_status"
-          
-              # Wait for a few seconds before the next check
-              Start-Sleep -Seconds 10  # Adjust the sleep time as needed
+              # Wait before the next retry
+              Start-Sleep -Seconds 10
               $retryCount++
           }
 
