@@ -83,6 +83,7 @@ jobs:
                     $quality_gate_status = $json.projectStatus.status
                     Write-Host "Quality Gate Status: $quality_gate_status"
                   } else {
+                    Write-Host "This is the response: $response"
                     Write-Host "Response was not in JSON format as expected."
                     exit 1
                   }

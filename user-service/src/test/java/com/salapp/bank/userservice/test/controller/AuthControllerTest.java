@@ -23,8 +23,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -61,16 +59,14 @@ class AuthControllerTest {
         when(userService.registerNewUser(signUpRequest)).thenReturn(new User(1L, "john.doe@example.com", "", null));
 
         // Act & Assert
-        ResultActions resultActions = mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(signUpRequest))
                         .with(csrf())
                 )
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated())
                 .andExpect(content().string("User registered successfully: " + signUpRequest.email()));
 
-        resultActions.andDo(MockMvcResultHandlers.print());
         Assertions.assertTrue(true);
     }
 
