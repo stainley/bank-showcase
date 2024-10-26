@@ -63,7 +63,7 @@ jobs:
           $retryCount = 0
           
           $Headers = @{
-              Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$SonarQubeToken:"))
+              Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${env:SONAR_TOKEN}:"))
           }
           
           Write-Host "${env:$SONAR_TOKEN}"
