@@ -86,10 +86,10 @@ jobs:
                   if ($response -is [System.Collections.IDictionary]) {
                       $quality_gate_status = $response.projectStatus.status
                       Write-Host "Quality Gate Status: $quality_gate_status"
-                  } else {
-                      Write-Host "This is the response: $response"
-                      Write-Host "Response was not in JSON format as expected."
                       exit 1
+                  } else {
+                      $quality_gate_status = $response.projectStatus.status
+                      Write-Host "Quality Gate Status: $quality_gate_status"
                   }
               } catch {
                   Write-Host "Error encountered: $_"
