@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - main
+      - dev
 
 jobs:
   sonarQubeAnalysis:
@@ -20,13 +22,23 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '21' # Update if your project requires a different JDK version
+          java-version: '21'
 
       - name: Cache SonarQube packages
         uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
+
+      - name: Run Unit Tests
+        run: |
+          mvn test -Punit-test  # Profile for unit tests (adjust as needed)
+        continue-on-error: false # Fail the job if unit tests fail
+
+      - name: Run Integration Tests
+        run: |
+          mvn verify -Pintegration-test # Profile for integration tests (adjust as needed)
+        continue-on-error: false # Fail the job if integration tests fail
 
       - name: Run SonarQube analysis
         env:
