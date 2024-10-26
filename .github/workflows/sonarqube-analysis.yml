@@ -55,12 +55,12 @@ jobs:
           # Wait for the analysis to complete
           sleep 30
           # Query the SonarQube API to get the quality gate status
-          quality_gate_status=$(curl -s -u $SONAR_TOKEN: "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase" | jq -r .projectStatus.status)
+          $quality_gate_status = (curl -s -u $env:SONAR_TOKEN: "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase" | jq -r .projectStatus.status)
 
-          echo "Quality Gate Status: $quality_gate_status"
+          Write-Host "Quality Gate Status: $quality_gate_status"
           
-          if [[ "$quality_gate_status" != "OK" ]]; then
-              echo "Quality Gate failed"
+          if ($quality_gate_status -ne "OK") {
+              Write-Host "Quality Gate failed"
               exit 1  # Fail the job if the quality gate is not OK
-          fi
+          }
 
