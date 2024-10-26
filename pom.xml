@@ -59,8 +59,12 @@
         <sonar.sources>${project.basedir}/src/main/java</sonar.sources>
         <sonar.java.binaries>${project.basedir}/src/main/java</sonar.java.binaries>
         <sonar.inclusions>
-            discovery-server/**/*,gateway-server/**/*,user-service/**/*,account-service/**/*,transaction-service/**/*,kafka-config/**/*,monitoring/**/*
+            user-service/**/*,account-service/**/*
         </sonar.inclusions>
+        <!--
+         discovery-server/**/*,gateway-server/**/*,
+         ,transaction-service/**/*,kafka-config/**/*,monitoring/**/*
+         -->
     </properties>
 
     <modules>
