@@ -46,5 +46,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: 'http://localhost:9000' # Adjust to your SonarQube local URL if necessary
         run: |
-          mvn clean verify sonar:sonar -Dsonar.projectKey=bank-showcase -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+          mvn clean verify sonar:sonar `
+            -Dsonar.projectKey=bank-showcase `
+            -Dsonar.host.url=$env:SONAR_HOST_URL `
+            -Dsonar.login=$env:SONAR_TOKEN
 
