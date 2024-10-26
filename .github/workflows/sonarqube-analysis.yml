@@ -62,18 +62,25 @@ jobs:
           $maxRetries = 30
           $retryCount = 0
           
+          $Headers = @{
+              Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$SonarQubeToken:"))
+          }
+          
           Write-Host "${env:$SONAR_TOKEN}"
           # Poll for the quality gate status
           while ($quality_gate_status -eq "PENDING" -and $retryCount -lt $maxRetries) {
               # Query the SonarQube API to get the quality gate status
               Write-Host "HOST URL = $env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
-              $response = Invoke-RestMethod -Uri "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase" -Method Get -Headers @{Authorization = "Basic $([Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$($env:SONAR_TOKEN):")))"}
+          
+              $response = Invoke-RestMethod -Uri "http://localhost:9000/api/qualitygates/project_status?projectKey=bank-showcase" -Headers $Headers          
           
               # Print the raw response for debugging
               Write-Host "Raw API Response: $response"
           
               # Parse the JSON response in PowerShell
               $json = $response | ConvertFrom-Json
+
+              Write-Host "Project Status $json"
               $quality_gate_status = $json.projectStatus.status
           
               Write-Host "Quality Gate Status: $quality_gate_status"
