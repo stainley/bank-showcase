@@ -55,11 +55,16 @@ jobs:
         run: |
           # Initialize the status variable
           $quality_gate_status = "PENDING"
-          
+          $maxRetries = 30 # Maximum number of retries
+          $retryCount = 0
+
           # Poll for the quality gate status
-          while ($quality_gate_status -eq "PENDING") {
+          while ($quality_gate_status -eq "PENDING" -and $retryCount -lt $maxRetries) {
               # Query the SonarQube API to get the quality gate status
               $response = curl -s -u "$env:SONAR_TOKEN:" "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
+          
+              # Print the raw response for debugging
+              Write-Host "Raw API Response: $response"
           
               # Parse the JSON response in PowerShell
               $json = $response | ConvertFrom-Json
@@ -69,10 +74,11 @@ jobs:
           
               # Wait for a few seconds before the next check
               Start-Sleep -Seconds 10  # Adjust the sleep time as needed
+              $retryCount++
           }
 
           if ($quality_gate_status -ne "OK") {
-              Write-Host "Quality Gate failed"
+              Write-Host "Quality Gate failed or timeout reached"
               exit 1  # Fail the job if the quality gate is not OK
           }
 
