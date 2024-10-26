@@ -68,7 +68,7 @@ jobs:
 
 
           Write-Host "Header is: $Headers"
-          Write-Host "${env:$SONAR_TOKEN}"
+          Write-Host "TOKEN = ${env:SONAR_TOKEN}"
           
           # Poll for the quality gate status
           while ($quality_gate_status -eq "PENDING" -and $retryCount -lt $maxRetries) {
@@ -77,8 +77,14 @@ jobs:
           
               try {
                   # Get the raw response
+                  $json_response = curl -H "Authorization: Bearer $env:SONAR_TOKEN" \
+                    "http://localhost:9000/api/qualitygates/project_status?projectKey=bank-showcase"
+          
+                  Write-Host "JSON Response: $json_response"
+          
                   $response = Invoke-RestMethod -Uri "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase" -Headers $Headers -ErrorAction Stop
                   Write-Host "Raw API Response: $response"
+          
           
                   # Check if response is in JSON format
                   if ($response -is [System.Collections.IDictionary]) {
