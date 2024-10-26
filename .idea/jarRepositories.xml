@@ -12,6 +12,16 @@
       <option name="url" value="http://localhost:8099/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="nexus-releases" />
+      <option name="name" value="nexus-releases" />
+      <option name="url" value="http://localhost:8099/repository/maven-releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="stainley-repository" />
+      <option name="name" value="stainley-repository" />
+      <option name="url" value="http://localhost:8099/repository/stainley-repository/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="nexus-snapshots" />
       <option name="name" value="nexus-snapshots" />
       <option name="url" value="http://localhost:8099/repository/maven-public/" />
@@ -20,6 +30,11 @@
       <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="central" />
+      <option name="url" value="http://central" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="company-repo" />
@@ -47,9 +62,19 @@
       <option name="url" value="http://localhost:8099/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="sonarqube" />
+      <option name="name" value="sonarqube" />
+      <option name="url" value="http://localhost:9000" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="apache.snapshots" />
       <option name="name" value="apache.snapshots" />
       <option name="url" value="http://localhost:8099/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus-snapshots" />
+      <option name="name" value="nexus-snapshots" />
+      <option name="url" value="http://localhost:8099/repository/maven-snapshots/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="apache.snapshots" />
@@ -65,6 +90,11 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="bank-showcase" />
+      <option name="name" value="bank-showcase" />
+      <option name="url" value="https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1" />
     </remote-repository>
   </component>
 </project>
