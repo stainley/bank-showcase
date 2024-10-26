@@ -56,51 +56,45 @@ jobs:
           # Set environment variables for debugging
           Write-Host "SONAR_TOKEN: $env:SONAR_TOKEN"
           Write-Host "SONAR_HOST_URL: $env:SONAR_HOST_URL"
-          
+
           # Initialize the status variable
           $quality_gate_status = "PENDING"
           $maxRetries = 30
           $retryCount = 0
-          
+
           $Headers = @{
             Authorization = "Bearer $env:SONAR_TOKEN"
           }
 
-
           Write-Host "Header is: $Headers"
           Write-Host "TOKEN = ${env:SONAR_TOKEN}"
-          
+
           # Poll for the quality gate status
           while ($quality_gate_status -eq "PENDING" -and $retryCount -lt $maxRetries) {
               # Query the SonarQube API to get the quality gate status
-              Write-Host "HOST URL = $env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
-          
+              $url = "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
+              Write-Host "HOST URL = $url"
+
               try {
-                  # Get the raw response
-                  $json_response = curl -H "Authorization: Bearer $env:SONAR_TOKEN" \
-                    "http://localhost:9000/api/qualitygates/project_status?projectKey=bank-showcase"
-          
-                  Write-Host "JSON Response: $json_response"
-          
-                  $response = Invoke-RestMethod -Uri "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase" -Headers $Headers -ErrorAction Stop
+                  # Get the raw response using Invoke-RestMethod
+                  $response = Invoke-RestMethod -Uri $url -Headers $Headers -ErrorAction Stop
+
                   Write-Host "Raw API Response: $response"
-          
-          
-                  # Check if response is in JSON format
+
+                  # Check if response is in JSON format and retrieve quality gate status
                   if ($response -is [System.Collections.IDictionary]) {
-                    $json = $response | ConvertFrom-Json
-                    $quality_gate_status = $json.projectStatus.status
-                    Write-Host "Quality Gate Status: $quality_gate_status"
+                      $quality_gate_status = $response.projectStatus.status
+                      Write-Host "Quality Gate Status: $quality_gate_status"
                   } else {
-                    Write-Host "This is the response: $response"
-                    Write-Host "Response was not in JSON format as expected."
-                    exit 1
+                      Write-Host "This is the response: $response"
+                      Write-Host "Response was not in JSON format as expected."
+                      exit 1
                   }
-            } catch {
-              Write-Host "Error encountered: $_"
-              exit 1
-            }
-          
+              } catch {
+                  Write-Host "Error encountered: $_"
+                  exit 1
+              }
+
               # Wait before the next retry
               Start-Sleep -Seconds 10
               $retryCount++
