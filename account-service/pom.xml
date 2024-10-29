@@ -52,6 +52,7 @@
     <properties>
         <java.version>21</java.version>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <sonar.coverage.exclusions>${project.basedir}/**/model/**</sonar.coverage.exclusions>
     </properties>
     <dependencies>
         <dependency>
@@ -155,17 +156,6 @@
             <version>0.0.2</version>
         </dependency>
 
-        <!--<dependency>
-            <groupId>com.salapp.bank</groupId>
-            <artifactId>common</artifactId>
-            <version>1.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-data-mongodb</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
     </dependencies>
     <dependencyManagement>
         <dependencies>

@@ -53,17 +53,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void validateAndSetAuthentication(String jwt, HttpServletRequest request) {
-        log.info("Validating jwt token {}", request.getRequestURI());
-        if (jwtTokenProvider.validateToken(jwt)) {
-            String username = jwtTokenProvider.getUsernameFromJwtToken(jwt);
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(userDetails);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("Authentication set for user {}", username);
-        } else {
-            log.debug("Invalid JWT token");
-        }
-    }
 }

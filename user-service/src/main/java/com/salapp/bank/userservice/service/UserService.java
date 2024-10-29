@@ -35,9 +35,9 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found " + id));
+        User user = findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found " + id));
 
-        userRepository.deleteById(id);
+        userRepository.deleteById(user.getId());
     }
 
     @Transactional
@@ -46,11 +46,7 @@ public class UserService {
             throw new DuplicateUserException("Email address already in use");
         }
 
-        User user = new User(
-                signUpRequest.email(),
-                passwordEncoder.encode(signUpRequest.password()),
-                List.of(new SimpleGrantedAuthority("ROLE_" + signUpRequest.role()))
-        );
+        User user = new User(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()), List.of(new SimpleGrantedAuthority("ROLE_" + signUpRequest.role())));
 
         return userRepository.save(user);
     }

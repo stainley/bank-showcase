@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salapp.bank.userservice.config.SecurityConfig;
 import com.salapp.bank.userservice.controller.UserController;
 import com.salapp.bank.userservice.exception.CustomAccessDeniedHandler;
-import com.salapp.bank.userservice.exception.InsufficientPrivilegeException;
 import com.salapp.bank.userservice.exception.UserNotFoundException;
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.security.CustomUserDetailsService;
@@ -13,9 +12,6 @@ import com.salapp.bank.userservice.security.JwtTokenProvider;
 import com.salapp.bank.userservice.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.DoNotMock;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,16 +20,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -235,22 +228,12 @@ class UserControllerTest {
                 new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities())
         );
 
-        // Configure the JwtAuthenticationFilter to throw an InsufficientPrivilegeException
-        /*doThrow(new InsufficientPrivilegeException("Insufficient privileges"))
-                .when(jwtTokenProvider).validateToken(jwtToken);*/
-
         mockMvc.perform(get("/users/admin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken)
                         .with(csrf()))
                 .andDo(print())
-                .andExpect(status().isForbidden())/*
-                .andExpect(jsonPath("$.status").value(403))
-                .andExpect(jsonPath("$.error").value("Forbidden"))
-                .andExpect(jsonPath("$.message").value("Access denied due to insufficient privileges"))
-                .andExpect(jsonPath("$.details.reason").value("Insufficient Privileges"))
-                .andExpect(jsonPath("$.details.description").value("You do not have the required permissions to perform this action."))
-                .andExpect(jsonPath("$.suggestions").value("Please contact your administrator if you believe this is an error."))*/;
+                .andExpect(status().isForbidden());
 
         // Verify that the access denied handler was called
         verify(customAccessDeniedHandler, times(1)).handle(any(), any(), any());
@@ -273,6 +256,15 @@ class UserControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void testTestAdminService_Authorized() throws Exception {
+        // Act & Assert
+        mockMvc.perform(get("/users/admin").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Admin Service tested"));
     }
 
 

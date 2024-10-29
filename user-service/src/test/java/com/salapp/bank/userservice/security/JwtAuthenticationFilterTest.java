@@ -41,7 +41,12 @@ class JwtAuthenticationFilterTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
+        try {
+            autoCloseable.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -109,6 +114,36 @@ class JwtAuthenticationFilterTest {
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
         // Ensure the filter chain is still called even when an exception occurs
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void testDoFilterInternal_MalformedToken() throws ServletException, IOException {
+        // Arrange – Malformed token (no token after "Bearer")
+        String malformedJwt = "Bearer ";
+
+        when(request.getHeader("Authorization")).thenReturn(malformedJwt);
+
+        // Act
+        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
+
+        // Assert – Authentication shouldn't be set in this case
+        assertNull(SecurityContextHolder.getContext().getAuthentication(), "Authentication should not be set for malformed token");
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void testDoFilterInternal_NonBearerToken() throws ServletException, IOException {
+        // Arrange – Authorization header without "Bearer" prefix
+        String nonBearerJwt = "NonBearerTokenValue";
+
+        when(request.getHeader("Authorization")).thenReturn(nonBearerJwt);
+
+        // Act
+        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
+
+        // Assert – Authentication shouldn't be set in this case
+        assertNull(SecurityContextHolder.getContext().getAuthentication(), "Authentication should not be set for non-Bearer token");
         verify(filterChain).doFilter(request, response);
     }
 }
