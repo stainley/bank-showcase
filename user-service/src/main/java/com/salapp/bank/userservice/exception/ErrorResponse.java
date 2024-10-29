@@ -1,11 +1,15 @@
 package com.salapp.bank.userservice.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 public class ErrorResponse {
@@ -19,6 +23,8 @@ public class ErrorResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime timestamp; // Timestamp of the error
 
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     @Getter
     public static class Details {

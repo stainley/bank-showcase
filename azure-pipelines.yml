@@ -4,6 +4,12 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  javaVersion: '21'
+  mavenGoals: 'clean verify'
+  mavenOptions: '-Dmaven.compiler.release=$(javaVersion)'
+  jacocoTool: 'JaCoCo'
+
 # Define multi-stage pipeline
 stages:
   - stage: Build_Shared_Service
@@ -14,14 +20,14 @@ stages:
         steps:
           - task: JavaToolInstaller@0
             inputs:
-              versionSpec: '21'
+              versionSpec: '$(javaVersion)'
               jdkArchitectureOption: 'x64'
               jdkSourceOption: 'PreInstalled'
           - task: Maven@3
             inputs:
               mavenPomFile: 'shared-service/pom.xml'
-              goals: 'clean install'
-              options: '-Dmaven.compiler.release=21'
+              goals: '$(mavenGoals)'
+              options: '$(mavenOptions)'
 
   - stage: Build_Account_Service
     jobs:
@@ -31,17 +37,17 @@ stages:
         steps:
           - task: JavaToolInstaller@0
             inputs:
-              versionSpec: '21'
+              versionSpec: '$(javaVersion)'
               jdkArchitectureOption: 'x64'
               jdkSourceOption: 'PreInstalled' # Use PreInstalled option or 'AzureStorage' if using custom JDK from storage
           - task: Maven@3
             inputs:
               mavenPomFile: 'account-service/pom.xml'
-              goals: 'clean verify'
-              options: '-Dmaven.compiler.release=21'
+              goals: '$(mavenGoals)'
+              options: '$(mavenOptions)'
           - task: PublishCodeCoverageResults@2
             inputs:
-              codeCoverageTool: JaCoCo
+              codeCoverageTool: '$(jacocoTool)'
               summaryFileLocation: '$(System.DefaultWorkingDirectory)/account-service/target/site/jacoco/jacoco.xml'
               reportDirectory: '$(System.DefaultWorkingDirectory)/account-service/target/site/jacoco'
   - stage: Build_User_Service
@@ -52,16 +58,16 @@ stages:
         steps:
           - task: JavaToolInstaller@0
             inputs:
-              versionSpec: '21'
+              versionSpec: '$(javaVersion)'
               jdkArchitectureOption: 'x64'
               jdkSourceOption: 'PreInstalled' # Use PreInstalled option or 'AzureStorage' if using custom JDK from storage
           - task: Maven@3
             inputs:
               mavenPomFile: 'user-service/pom.xml'
-              goals: 'clean verify'
-              options: '-Dmaven.compiler.release=21'
+              goals: '$(mavenGoals)'
+              options: '$(mavenOptions)'
           - task: PublishCodeCoverageResults@2
             inputs:
-              codeCoverageTool: JaCoCo
+              codeCoverageTool: '$(jacocoTool)'
               summaryFileLocation: '$(System.DefaultWorkingDirectory)/user-service/target/site/jacoco/jacoco.xml'
               reportDirectory: '$(System.DefaultWorkingDirectory)/user-service/target/site/jacoco'

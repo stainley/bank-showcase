@@ -1,0 +1,16 @@
+name: SonarQube Quality Gate Webhook
+
+on:
+  workflow_dispatch:
+    repository_dispatch:
+      types: [ sonarqube_quality_gate ]  # Custom event name
+
+jobs:
+  handleQualityGate:
+    runs-on: self-hosted
+    steps:
+      - name: Handle Quality Gate
+        run: |
+          # Parse the JSON payload and check quality gate status
+          echo "Processing SonarQube Quality Gate notification"
+          Write-Host "Notification Received"

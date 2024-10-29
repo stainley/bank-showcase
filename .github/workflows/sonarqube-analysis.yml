@@ -46,5 +46,56 @@ jobs:
           SONAR_HOST_URL: 'http://localhost:9000' # Adjust to your SonarQube local URL if necessary
         run: |
           mvn clean verify sonar:sonar -D'sonar.projectKey=bank-showcase' -D'sonar.login'=$SONAR_TOKEN -D'sonar.host.url=http://localhost:9000'
-            
 
+      - name: Check SonarQube Quality Gate
+        shell: pwsh
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: 'http://localhost:9000'
+        run: |
+          # Set environment variables for debugging
+          Write-Host "SONAR_TOKEN: $env:SONAR_TOKEN"
+          Write-Host "SONAR_HOST_URL: $env:SONAR_HOST_URL"
+          
+          # Initialize the status variable
+          $quality_gate_status = "PENDING"
+          $maxRetries = 30
+          $retryCount = 0
+          
+          $Headers = @{
+            Authorization = "Bearer $env:SONAR_TOKEN"
+          }
+          
+          Write-Host "Header is: $Headers"
+          Write-Host "TOKEN = ${env:SONAR_TOKEN}"
+          
+          # Poll for the quality gate status
+          while ($quality_gate_status -eq "PENDING" -and $retryCount -lt $maxRetries) {
+            # Query the SonarQube API to get the quality gate status
+            $url = "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
+            Write-Host "HOST URL = $url"
+          
+            try {
+                # Get the raw response using Invoke-RestMethod
+                $response = Invoke-RestMethod -Uri $url -Headers $Headers -ErrorAction Stop
+          
+                Write-Host "Raw API Response: $response"
+          
+                # Retrieve quality gate status
+                $quality_gate_status = $response.projectStatus.status
+                Write-Host "Quality Gate Status: $quality_gate_status"
+          
+            } catch {
+                Write-Host "Error encountered: $_"
+                exit 1
+            }
+          
+            # Wait before the next retry
+            Start-Sleep -Seconds 10
+            $retryCount++
+          }
+          
+          if ($quality_gate_status -ne "OK") {
+              Write-Host "Quality Gate failed or timeout reached"
+              exit 1  # Fail the job if the quality gate is not OK
+          }

@@ -1,6 +1,7 @@
 package com.salapp.bank.userservice.service;
 
 import com.salapp.bank.userservice.exception.DuplicateUserException;
+import com.salapp.bank.userservice.exception.UserNotFoundException;
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.payload.SignUpRequest;
 import com.salapp.bank.userservice.repository.UserRepository;
@@ -34,7 +35,9 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        User user = findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found " + id));
+
+        userRepository.deleteById(user.getId());
     }
 
     @Transactional
@@ -43,11 +46,7 @@ public class UserService {
             throw new DuplicateUserException("Email address already in use");
         }
 
-        User user = new User(
-                signUpRequest.email(),
-                passwordEncoder.encode(signUpRequest.password()),
-                List.of(new SimpleGrantedAuthority("ROLE_" + signUpRequest.role()))
-        );
+        User user = new User(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()), List.of(new SimpleGrantedAuthority("ROLE_" + signUpRequest.role())));
 
         return userRepository.save(user);
     }
