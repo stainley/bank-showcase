@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SuppressWarnings("unused")
 @WebMvcTest(controllers = UserController.class)
 @ComponentScan(basePackages = {"com.salapp.bank.userservice.exception"})
 @ContextConfiguration(classes = {UserControllerTest.class, UserController.class})
@@ -96,7 +97,7 @@ class UserControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        // Set JWT secret manually if it’s not loaded from properties in the test environment
+        // Set JWT secret manually if it is not loaded from properties in the test environment
         ReflectionTestUtils.setField(jwtTokenProvider, "jwtSecret", "Z2NlNjM5MGQ3MjE5NDI3YTUyMzIxNTI2Y2Y0NWU2NzI");
 
         // Set expiration times if needed
@@ -134,7 +135,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     void testGetUserById_UserNotFound() throws Exception {
-        // Arrange: simulate a user ID that does not exist in the database.
+        // Arrange: simulate a user ID that doesn't exist in the database.
         when(userService.findUserById(anyLong())).thenThrow(new UserNotFoundException("User not found"));
 
         // Act & Assert: Verify the response for a non-existent user ID.
@@ -186,7 +187,7 @@ class UserControllerTest {
                 new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities())
         );
 
-        // Arrange: simulate a user ID that does not exist in the database.
+        // Arrange: simulate a user ID that doesn't exist in the database.
         doThrow(new UserNotFoundException("User not found"))
                 .when(userService)
                 .deleteUser(999L);

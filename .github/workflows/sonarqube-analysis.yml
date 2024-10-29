@@ -66,20 +66,14 @@ jobs:
             Authorization = "Bearer $env:SONAR_TOKEN"
           }
           
-          Write-Host "Header is: $Headers"
-          Write-Host "TOKEN = ${env:SONAR_TOKEN}"
-          
           # Poll for the quality gate status
           while ($quality_gate_status -eq "PENDING" -and $retryCount -lt $maxRetries) {
             # Query the SonarQube API to get the quality gate status
             $url = "$env:SONAR_HOST_URL/api/qualitygates/project_status?projectKey=bank-showcase"
-            Write-Host "HOST URL = $url"
           
             try {
                 # Get the raw response using Invoke-RestMethod
-                $response = Invoke-RestMethod -Uri $url -Headers $Headers -ErrorAction Stop
-          
-                Write-Host "Raw API Response: $response"
+                $response = Invoke-RestMethod -Uri $url -Headers $Headers -ErrorAction Stop         
           
                 # Retrieve quality gate status
                 $quality_gate_status = $response.projectStatus.status
