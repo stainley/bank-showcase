@@ -60,6 +60,40 @@ public class GlobalExceptionHandler {
         return createErrorResponse(exception, HttpStatus.CONFLICT, details, "Please use a different email address or login if you already have an account.");
     }
 
+    /**
+     * Handles empty field exceptions.
+     *
+     * @param exception EmptyFieldException instance
+     * @return ResponseEntity with error response
+     */
+    @ExceptionHandler(EmptyFieldException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyFieldException(EmptyFieldException exception) {
+        ErrorResponse.Details details = ErrorResponse.Details.builder()
+                .reason("There is a field empty")
+                .field("Email or Password")
+                .description(exception.getMessage())
+                .build();
+
+        return createErrorResponse(exception, HttpStatus.BAD_REQUEST, details, "Please field the required fields.");
+    }
+
+    /**
+     * Handles invalid credentials exceptions.
+     *
+     * @param exception handleInvalidCredentialException instance
+     * @return ResponseEntity with error response
+     */
+    @ExceptionHandler(InvalidCredentialException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentialException(InvalidCredentialException exception) {
+        ErrorResponse.Details details = ErrorResponse.Details.builder()
+                .reason("Invalid credentials")
+                .field("Email or Password")
+                .description(exception.getMessage())
+                .build();
+
+        return createErrorResponse(exception, HttpStatus.UNAUTHORIZED, details, "Check the username or password.");
+    }
+
 
     /**
      * Creates a standardized error response.

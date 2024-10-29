@@ -1,5 +1,7 @@
 package com.salapp.bank.userservice.controller;
 
+import com.salapp.bank.userservice.exception.EmptyFieldException;
+import com.salapp.bank.userservice.exception.InvalidCredentialException;
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.payload.AuthTokenResponse;
 import com.salapp.bank.userservice.payload.LoginRequest;
@@ -7,6 +9,7 @@ import com.salapp.bank.userservice.payload.SignUpRequest;
 import com.salapp.bank.userservice.security.CustomUserDetailsService;
 import com.salapp.bank.userservice.security.JwtTokenProvider;
 import com.salapp.bank.userservice.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +20,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -34,7 +36,10 @@ public class AuthController implements IAuthController {
     private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> registerUser(@Validated @RequestBody final SignUpRequest signUpRequest) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody final SignUpRequest signUpRequest) {
+        if (signUpRequest.email().isEmpty() || signUpRequest.password().isEmpty()) {
+            throw new EmptyFieldException("Fill all required fields");
+        }
         User newUser = userService.registerNewUser(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully: " + newUser.getEmail());
     }
@@ -57,8 +62,8 @@ public class AuthController implements IAuthController {
             String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
             Long expiresIn = jwtTokenProvider.getTokenExpirationTime();
             return ResponseEntity.ok(new AuthTokenResponse(accessToken, refreshToken, expiresIn, "Bearer", "read write"));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            throw new InvalidCredentialException(e.getMessage());
         }
 
     }

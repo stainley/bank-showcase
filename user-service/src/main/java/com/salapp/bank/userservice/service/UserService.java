@@ -1,6 +1,7 @@
 package com.salapp.bank.userservice.service;
 
 import com.salapp.bank.userservice.exception.DuplicateUserException;
+import com.salapp.bank.userservice.exception.UserNotFoundException;
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.payload.SignUpRequest;
 import com.salapp.bank.userservice.repository.UserRepository;
@@ -34,6 +35,8 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        findUserById(id).orElseThrow(() -> new UserNotFoundException("User not found " + id));
+
         userRepository.deleteById(id);
     }
 

@@ -9,11 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
-@TestPropertySource("classpath:application-test.yml")
 class JwtTokenProviderTest {
     @InjectMocks
     private JwtTokenProvider jwtTokenProvider;
@@ -37,7 +40,9 @@ class JwtTokenProviderTest {
         AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
 
         when(userDetails.getUsername()).thenReturn("testUser");
-        when(userDetails.getAuthorities()).thenReturn((Collections.emptyList()));
+        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+
+        when(userDetails.getAuthorities()).then(invocation -> authorities);
 
         // Generate a secure secret key
         // Test secret and expiration values
@@ -71,7 +76,7 @@ class JwtTokenProviderTest {
                 .getBody();
 
         assertEquals("testUser", claims.getSubject(), "Username should match");
-        assertInstanceOf(List.class, claims.get("role"), "Roles claim should be a list");
+        assertInstanceOf(List.class, claims.get("roles"), "Roles claim should be a list");
     }
 
     @Test

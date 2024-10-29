@@ -2,7 +2,9 @@ package com.salapp.bank.userservice.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
@@ -25,8 +29,15 @@ public class JwtTokenProvider {
     private long refreshExpiration;
 
     public String generateAccessToken(UserDetails userDetails) {
+
+        userDetails.getAuthorities().forEach(authority -> log.info("Generating access token for user: {} {}", userDetails.getUsername(), authority.getAuthority()));
+
+
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities());
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList(); // Ensure they have the "ROLE_"
+        claims.put("roles", roles); // Use a key that makes sense for your application
         return createToken(claims, userDetails.getUsername(), accessExpiration);
     }
 

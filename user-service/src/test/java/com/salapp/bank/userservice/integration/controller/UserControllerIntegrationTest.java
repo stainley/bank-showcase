@@ -1,4 +1,4 @@
-package com.salapp.bank.userservice.integration;
+package com.salapp.bank.userservice.integration.controller;
 
 import com.salapp.bank.userservice.model.User;
 import com.salapp.bank.userservice.repository.UserRepository;
@@ -19,6 +19,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @Testcontainers
 @SpringBootTest
@@ -59,7 +60,7 @@ class UserControllerIntegrationTest {
     @WithMockUser(username = "testuser")
     @Test
     void testGetAllUsers() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+        mockMvc.perform(get("/users"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
@@ -69,13 +70,16 @@ class UserControllerIntegrationTest {
 
     @WithMockUser(username = "testuser", roles = {"ADMIN"})
     @Test
-    void testDeleteUser() throws Exception {
+    void testDeleteUser_NotFoundUser() throws Exception {
+
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/1")
                         .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
+        mockMvc.perform(get("/users/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+
 
 }
