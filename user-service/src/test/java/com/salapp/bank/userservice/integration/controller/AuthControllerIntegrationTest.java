@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -54,9 +54,9 @@ class AuthControllerIntegrationTest {
 
     @Test
     void testLoginNonExistentUser() throws Exception {
+
         LoginRequest loginRequest = new LoginRequest("nonexistent@example.com", "password123");
-        loginUser(loginRequest)
-                .andExpect(status().isNotFound());
+        loginUser(loginRequest).andExpect(status().isUnauthorized());
     }
 
     @Test

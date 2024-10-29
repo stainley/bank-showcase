@@ -1,10 +1,9 @@
 package com.salapp.bank.accountservice.model;
 
 import com.salapp.bank.accountservice.exception.InsufficientBalanceException;
-//import com.salapp.bank.common.model.Account;
+import com.salapp.bank.shared.model.Account;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.Getter;
@@ -19,11 +18,8 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "credit_card_accounts")
-public class CreditCardAccount //extends Account
-{
+public class CreditCardAccount extends Account {
 
-    @Id
-    private Long id;
 
     @DecimalMin(value = "0.0", inclusive = false)
     @Column(name = "credit_limit", nullable = false)
@@ -37,26 +33,26 @@ public class CreditCardAccount //extends Account
     private LocalDateTime billingCycle;
 
     public CreditCardAccount(Long accountId, String userId, BigDecimal balance, BigDecimal creditLimit, BigDecimal interestRate) {
-        //super(accountId, userId, balance);
+        super(accountId, userId, balance);
         this.creditLimit = creditLimit;
         this.interestRate = interestRate;
     }
 
-    //@Override
+    @Override
     public void deposit(BigDecimal amount) {
-        //setBalance(getBalance().add(amount));
+        setBalance(getBalance().add(amount));
     }
 
-    //@Override
+    @Override
     public void withdraw(BigDecimal amount) {
-        /*if (getBalance().add(creditLimit).compareTo(amount) >= 0) {
+        if (getBalance().add(creditLimit).compareTo(amount) >= 0) {
             setBalance(getBalance().subtract(amount));
         } else {
             throw new InsufficientBalanceException("Credit limit exceeded.");
-        }*/
+        }
     }
 
     public void applyInterest() {
-        //setBalance(getBalance().add(getBalance().multiply(interestRate)));
+        setBalance(getBalance().add(getBalance().multiply(interestRate)));
     }
 }

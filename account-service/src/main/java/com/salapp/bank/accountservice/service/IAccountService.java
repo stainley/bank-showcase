@@ -1,6 +1,5 @@
 package com.salapp.bank.accountservice.service;
 
-//import com.salapp.bank.common.model.Account;
 
 import java.util.List;
 

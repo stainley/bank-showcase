@@ -13,7 +13,7 @@ spring:
       uri: mongodb://localhost:27017
       authentication-database: admin
       username: myuser
-      password: mypassword
+      password: ${mypassword}
 axon:
   eventhandling:
     processors:

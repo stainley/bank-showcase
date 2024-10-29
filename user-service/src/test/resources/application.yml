@@ -2,11 +2,11 @@ spring:
   datasource:
     url: jdbc:tc:postgresql:14-alpine:///userservice
     username: postgres
-    password: postgres
+    password: ${DB_PASSWORD:your_password}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate.ddl-auto: update
-    show-sql: true
+    show-sql: false
 jwt:
   secret: Z2NlNjM5MGQ3MjE5NDI3YTUyMzIxNTI2Y2Y0NWU2NzI=
   access:

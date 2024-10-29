@@ -35,6 +35,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
      */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
+
+        // Set response status and content type
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.FORBIDDEN.value())
                 .error(HttpStatus.FORBIDDEN.getReasonPhrase())
@@ -46,10 +51,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                 .suggestions("Please contact your administrator if you believe this is an error.")
                 .timestamp(LocalDateTime.now())
                 .build();
-
-        // Set response status and content type
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.setContentType("application/json");
 
         // Write error response to output stream
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
