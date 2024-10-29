@@ -9,9 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -41,26 +44,17 @@ class JwtAuthenticationFilterTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    /*@Test
+    @Test
     void testDoFilterInternal_ValidToken() throws ServletException, IOException {
         // Arrange
         String username = "testUser";
+        String jwt = "mockJwtToken";  // Use a mock token directly
 
-        // Create a mock UserDetails and set its behavior
         UserDetails userDetails = mock(UserDetails.class);
         when(userDetails.getUsername()).thenReturn(username);
-        //when(userDetails.getAuthorities()).thenReturn(List.of(""));
+        when(userDetails.getAuthorities()).thenReturn(Collections.emptyList());
 
-        // Generate a valid JWT token using the JwtTokenProvider
-        String jwt = jwtTokenProvider.generateAccessToken(userDetails);
-
-        // Log the JWT token for verification
-        System.out.println("Generated JWT Token: {}" + jwt);
-
-        // Mock the request header to return the JWT token
         when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
-
-        // Mock the behavior of the JWT token provider and user details service
         when(jwtTokenProvider.validateToken(jwt)).thenReturn(true);
         when(jwtTokenProvider.getUsernameFromJwtToken(jwt)).thenReturn(username);
         when(customUserDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
@@ -69,19 +63,15 @@ class JwtAuthenticationFilterTest {
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
         // Assert
-        // Verify the security context holds the correct authentication
         assertNotNull(SecurityContextHolder.getContext().getAuthentication(), "Authentication should not be null");
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-
-        // Add more detailed assertions to help diagnose any issues
         assertEquals(username, authentication.getName(), "Expected username was not set in authentication");
         assertEquals(userDetails, authentication.getPrincipal(), "Expected UserDetails was not set as principal");
         assertTrue(authentication.isAuthenticated(), "Authentication should be marked as authenticated");
 
-        // Verify that the filter chain is called
         verify(filterChain).doFilter(request, response);
-    }*/
+    }
 
 
     @Test
