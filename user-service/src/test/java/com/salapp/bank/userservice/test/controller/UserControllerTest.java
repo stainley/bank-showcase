@@ -245,8 +245,8 @@ class UserControllerTest {
         // Simulate invalid input for user creation (for example, missing email and password).
         String invalidUserJson = """
                 {
-                    "email": "",
-                    "password": ""
+                    "email": ",
+                    "password""
                 }
                 """;
 
