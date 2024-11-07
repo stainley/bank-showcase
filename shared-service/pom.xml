@@ -15,7 +15,7 @@
     </properties>
 
     <distributionManagement>
-        <!--<repository>
+        <repository>
             <id>nexus</id>
             <name>Releases</name>
             <url>http://localhost:8099/repository/maven-releases</url>
@@ -24,8 +24,8 @@
             <id>nexus</id>
             <name>Snapshot</name>
             <url>http://localhost:8099/repository/maven-snapshots</url>
-        </snapshotRepository>-->
-        <repository>
+        </snapshotRepository>
+        <!--<repository>
             <id>bank-showcase</id>
             <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
             <releases>
@@ -34,7 +34,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
     </distributionManagement>
     <repositories>
         <repository>
@@ -71,9 +71,9 @@
             <version>1.18.34</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -120,4 +120,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 </project>

@@ -7,11 +7,16 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 
 import java.security.Key;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 @Component
@@ -47,12 +52,28 @@ public class JwtUtil {
                     .build()
                     .parseClaimsJws(authToken);
 
+            log.info("WT token successfully validated");
+
         } catch (JwtException jwtException) {
             log.error("Invalid JWT", jwtException);
+            throw jwtException;
         }
     }
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public Collection<GrantedAuthority> extractAuthorities(String token) {
+        Claims claims = extractAllClaimsFromToken(token);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+
+        // Assuming roles are stored as a list of strings under "roles" claim
+        List<String> roles = claims.get("roles", List.class);
+        if (roles != null) {
+            roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+        }
+
+        return authorities;
     }
 }

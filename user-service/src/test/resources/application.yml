@@ -7,9 +7,9 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate.ddl-auto: update
     show-sql: false
-jwt:
-  secret: Z2NlNjM5MGQ3MjE5NDI3YTUyMzIxNTI2Y2Y0NWU2NzI=
-  access:
-    expiration: 604800000
-  refresh:
-    expiration: 604800000
+#jwt:
+#  secret: Z2NlNjM5MGQ3MjE5NDI3YTUyMzIxNTI2Y2Y0NWU2NzI=
+#  access:
+#    expiration: 604800000
+#  refresh:
+#    expiration: 604800000

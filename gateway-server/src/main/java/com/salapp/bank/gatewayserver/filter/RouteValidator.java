@@ -17,14 +17,16 @@ public class RouteValidator {
     }
 
 
-    // Define a list of public URLs that do not require authentication
+    // Define a list of public URLs that don't require authentication
     private static final List<String> openApiEndpoints = List.of(
             "/api/auth/login",
+            "/api/auth/token",
             "/api/auth/register",
             "api/auth/logout",
             "/api/auth/refresh",
             "/api/auth/forgot-password",
-            "/eureka"
+            "/eureka",
+            "/api/accounts/test"
     );
 
     // Method to check if a route is open (public)

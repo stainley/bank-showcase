@@ -15,7 +15,7 @@
     <description>account-service</description>
 
     <distributionManagement>
-        <!--<repository>
+        <repository>
             <id>nexus</id>
             <name>Releases</name>
             <url>http://localhost:8099/repository/maven-releases</url>
@@ -24,30 +24,30 @@
             <id>nexus</id>
             <name>Snapshot</name>
             <url>http://localhost:8099/repository/maven-snapshots</url>
-        </snapshotRepository>-->
-        <repository>
-            <id>bank-showcase</id>
-            <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+        </snapshotRepository>
+        <!-- <repository>
+             <id>bank-showcase</id>
+             <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
+             <releases>
+                 <enabled>true</enabled>
+             </releases>
+             <snapshots>
+                 <enabled>true</enabled>
+             </snapshots>
+         </repository>-->
     </distributionManagement>
-    <repositories>
-        <repository>
-            <id>bank-showcase</id>
-            <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    <!-- <repositories>
+         <repository>
+             <id>bank-showcase</id>
+             <url>https://slebron.pkgs.visualstudio.com/bank-showcase/_packaging/bank-showcase/maven/v1</url>
+             <releases>
+                 <enabled>true</enabled>
+             </releases>
+             <snapshots>
+                 <enabled>true</enabled>
+             </snapshots>
+         </repository>
+     </repositories>-->
 
     <properties>
         <java.version>21</java.version>
@@ -57,11 +57,11 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <!--        <dependency>
                     <groupId>org.flywaydb</groupId>
@@ -106,15 +106,38 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <!-- Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
-        <dependency>
+
+
+        <!-- Security -->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>-->
+        <!--<dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -125,11 +148,7 @@
             <artifactId>spring-boot-testcontainers</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>spring-web-test-client</artifactId>
@@ -154,6 +173,18 @@
             <groupId>com.salapp.bank</groupId>
             <artifactId>shared-service</artifactId>
             <version>0.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-mongodb</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

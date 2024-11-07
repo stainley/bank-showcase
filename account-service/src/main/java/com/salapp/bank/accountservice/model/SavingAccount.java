@@ -3,23 +3,26 @@ package com.salapp.bank.accountservice.model;
 import com.salapp.bank.accountservice.exception.InsufficientBalanceException;
 
 import com.salapp.bank.shared.model.Account;
+import com.salapp.bank.shared.model.JpaAccount;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "savings_accounts")
-public class SavingAccount extends Account {
+public class SavingAccount extends JpaAccount {
 
     @DecimalMin(value = "0.0", inclusive = false)
     @Column(name = "interest_rate", nullable = false)

@@ -1,9 +1,11 @@
 server:
   port: 8081
 spring:
-
   application:
     name: user-service
+  config:
+    activate:
+      on-profile: dev
   security:
     oauth2:
       client:
@@ -32,9 +34,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  config:
-    activate:
-      on-profile: dev
 
 eureka:
   client:
@@ -60,9 +59,3 @@ jwt:
 logging:
   level:
     root: error
----
-# Production Configuration
-spring:
-  config:
-    activate:
-      on-profile: prod

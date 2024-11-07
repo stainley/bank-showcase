@@ -3,24 +3,25 @@ package com.salapp.bank.accountservice.model;
 
 import com.salapp.bank.accountservice.exception.InsufficientBalanceException;
 import com.salapp.bank.shared.model.Account;
+import com.salapp.bank.shared.model.JpaAccount;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "checking_accounts")
-public class CheckingAccount extends Account {
-    @Id
-    private Long id;
+public class CheckingAccount extends JpaAccount {
 
     @Column(name = "overdraft_protection", nullable = false)
     private boolean overdraftProtection;

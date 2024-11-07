@@ -16,11 +16,11 @@
         <module name="user-service" />
         <module name="account-service" />
         <module name="monitoring" />
+        <module name="shared-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="shared" target="21" />
-      <module name="shared-service" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

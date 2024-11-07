@@ -1,6 +1,5 @@
 server:
   port: 8761
-
 eureka:
   instance:
     hostname: localhost
@@ -8,10 +7,37 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+
+    # Optional: Enable CORS to allow cross-origin requests
+    registry-fetch-interval-seconds: 30  # How often the server fetches the registry
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
   server:
-    enable-self-preservation: false
+    enable-self-preservation: false  # Disable self-preservation for easier testing (be cautious in production)
+
+    # Optional: Configure security to protect the Eureka dashboard
+    # security:
+    #   user:
+    #     name: admin  # Set a username for accessing the Eureka dashboard
+    #     password: password  # Set a password for accessing the Eureka dashboard
+
+    # Optional: Configure the retention policy for instances
+    eviction-interval-timer-in-ms: 5000  # How often to clean up the registry
+
 spring:
   application:
     name: discovery-server
   profiles:
     active: default
+  cloud:
+    loadbalancer:
+      enabled: true
+      zone: my-zone
+      subset:
+        instance-id: instance1
+        size: 100
+
+# Optional: Configure logging to monitor the Eureka server
+logging:
+  level:
+    com.netflix.eureka: debug  # Set the logging level for Eureka

@@ -1,9 +1,10 @@
 package com.salapp.bank.accountservice.service;
 
+import com.salapp.bank.shared.model.Account;
 
 import java.util.List;
 
-public interface IAccountService<T> {
+public interface AccountService<T extends Account> {
 
     T createAccount(T account);
 
@@ -12,6 +13,4 @@ public interface IAccountService<T> {
     List<T> getAllAccounts();
 
     void deleteAccount(Long id);
-
-
 }

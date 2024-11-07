@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -50,9 +50,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> testUserService() {
+    public ResponseEntity<String> testUserService(@RequestHeader("X-Csrf-Token") String crsf) {
+
+        log.info(crsf);
 
         log.info("User invoked this service");
 

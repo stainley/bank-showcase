@@ -2,94 +2,109 @@ server:
   port: 8080
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
+
   application:
     name: gateway-server
   cloud:
+    loadbalancer:
+      enabled: true
     gateway:
       discovery:
         locator:
           enabled: true
+          lower-case-service-id: true
       routes:
-        # USER SERVICE
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/auth/**,/users/**
-          filters:
-            - name: LoggingFilter
-            - name: RequestRateLimiter
-              args:
-                key-resolver: '#{@userKeyResolver}'
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-            - name: CircuitBreaker
-              args:
-                name: userServiceCircuitBreaker
-                fallbackUri: forward:/fallback/authentication
-                statusCodes: 504 # Fallback for 504 Timeout
-            - name: Retry
-              args:
-                retries: 3
-                statuses: SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR, BAD_GATEWAY
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 5s
-                  factor: 2  # Exponential backoff
-            #- name: Timeout
-            #  args:
-            #    connect-timeout: 10000 # Connection timeout in milliseconds
-            #    response-timeout: 30000 # Response timeout in milliseconds
-        # ACCOUNT SERVICE
-        - id: account-service
-          uri: lb://account-service
-          predicates:
-            - Path=/api/accounts/**
-          filters:
-            - name: AuthenticationFilter
-            - name: CircuitBreaker
-              args:
-                name: accountServiceCircuitBreaker
-                fallbackUri: forward:/fallback/account
-            - name: Retry
-              args:
-                retries: 5
-                statuses: SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR, BAD_GATEWAY
-                firstBackoff: 1s
-                maxBackoff: 30s
-                factor: 2
-        - id: transaction-service
-          uri: lb://transaction-service
-          predicates:
-            - Path=/transactions/**
-          filters:
-            - name: AuthenticationFilter
-            - name: RequestRateLimiter
-              args:
-                key-resolver: '#{@userKeyResolver}'
-                redis-rate-limiter.replenishRate: 5
-                redis-rate-limiter.burstCapacity: 10
-    loadbalancer:
-      retry:
-        enabled: true
+      #USER SERVICE
+      #- id: user-service
+      #  uri: lb://user-service
+      #  predicates:
+      #    - Path=/api/auth/**,/api/users/**
+      #  filters:
+      #    - name: AuthFilter
+      #    - name: LoggingFilter
+      #    - name: RequestRateLimiter
+      #      args:
+      #        key-resolver: '#{@userKeyResolver}'
+      #        redis-rate-limiter.replenishRate: 10
+      #        redis-rate-limiter.burstCapacity: 20
+      #    - name: CircuitBreaker
+      #      args:
+      #        name: userServiceCircuitBreaker
+      #        fallbackUri: forward:/fallback/authentication
+      #        statusCodes: 504 # Fallback for 504 Timeout
+      #    - name: Retry
+      #      args:
+      #        retries: 3
+      #        statuses: SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR, BAD_GATEWAY
+      #        backoff:
+      #          firstBackoff: 500ms
+      #          maxBackoff: 5s
+      #          factor: 2  # Exponential backoff
+      #    - name: Timeout
+      #      args:
+      #        connect-timeout: 10000 # Connection timeout in milliseconds
+      #        response-timeout: 30000 # Response timeout in milliseconds
+      # ACCOUNT SERVICE
+      #- id: account-service
+      #  uri: lb://account-service
+      #  predicates:
+      #    - Path=/api/accounts/**
+      #  filters:
+      #    - name: CircuitBreaker
+      #      args:
+      #        name: accountServiceCircuitBreaker
+      #        fallbackUri: forward:/fallback/account
+      #    - name: Retry
+      #      args:
+      #        retries: 5
+      #        statuses: SERVICE_UNAVAILABLE, INTERNAL_SERVER_ERROR, BAD_GATEWAY
+      #        firstBackoff: 1s
+      #        maxBackoff: 30s
+      #        factor: 2
+      # TRANSACTIONS SERVICES
+      #- id: transaction-service
+      #  uri: lb://transaction-service
+      #  predicates:
+      #    - Path=/api/transactions/**
+      #  filters:
+      #    - name: RequestRateLimiter
+      #      args:
+      #        key-resolver: '#{@userKeyResolver}'
+      #        redis-rate-limiter.replenishRate: 5
+      #        redis-rate-limiter.burstCapacity: 10
+      #filter:
+      #  secure-headers:
+      #    disable: true
+    #loadbalancer:
+    #  retry:
+    #    enabled: true
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
 
 management:
   endpoints:
     web:
       exposure:
         include: health, metrics, prometheus
-  prometheus:
-    metrics:
-      export:
-        enabled: true
+#  prometheus:
+#    metrics:
+#      export:
+#        enabled: true
 
 logging:
   level:
-    org.springframework.cloud.gateway: info
+    org.springframework.security: trace
+    org.springframework.cloud: trace
+    com.salapp.bank.gatewayserver: trace
 
 resilience4j:
   circuitbreaker:
@@ -100,12 +115,15 @@ resilience4j:
         wait-duration-in-open-state: 5s
         slidingWindowSize: 100
       accountServiceCircuitBreaker:
-        minimum-number-of-calls: 10
+        minimum-number-of-calls: 20
         failureRateThreshold: 50
-        slow-call-duration-threshold:
-          seconds: 1
-        wait-duration-in-open-state:
-          seconds: 3
+        wait-duration-in-open-state: 10s
+        slidingWindowSize: 100
+        #failureRateThreshold: 50
+        #slow-call-duration-threshold:
+        #  seconds: 1
+        #wait-duration-in-open-state:
+        #  seconds: 3
 jwt:
   secret: Z2NlNjM5MGQ3MjE5NDI3YTUyMzIxNTI2Y2Y0NWU2NzI=
   access:

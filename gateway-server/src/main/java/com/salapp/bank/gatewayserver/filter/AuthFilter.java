@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
+public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
 
     private final RouteValidator validator;
 
     private final JwtUtil jwtUtil;
 
-    public AuthenticationFilter(RouteValidator validator, JwtUtil jwtUtil) {
+    public AuthFilter(RouteValidator validator, JwtUtil jwtUtil) {
         super(Config.class);
         this.validator = validator;
         this.jwtUtil = jwtUtil;
@@ -28,6 +28,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Override
     public GatewayFilter apply(Config config) {
+        log.info("Gateway Filter: {}", config);
+
         return (exchange, chain) -> {
 
             ServerHttpRequest request = exchange.getRequest();
@@ -54,11 +56,15 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                     // Extract the username from the JWT and add it to the request headers
                     String username = jwtUtil.extractUsername(token);
+
+                    String csrfToken = request.getHeaders().getFirst("X-CSRF-Token");
+
                     ServerHttpRequest mutatedRequest = request.mutate()
-                            .header("loggedInUser", username)
+                            //.header("loggedInUser", username)
+                            //.header("X-CSRF-Token", csrfToken)
                             .build();
 
-                    log.info("Token validated successfully. Logged in user: {}", username);
+                    log.info("AuthFilter: Token validated successfully. Logged in user: {}", username);
 
                     // Proceed with the filter chain using the mutated request
                     return chain.filter(exchange.mutate().request(mutatedRequest).build());
@@ -69,7 +75,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 }
             }
 
-            // If the route does not require authentication, proceed without modification
+            // If the route doesn't require authentication, proceed without modification
             return chain.filter(exchange);
         };
     }

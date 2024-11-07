@@ -1,12 +1,12 @@
 package com.salapp.bank.transactionservice.cqrs;
 
 import lombok.Getter;
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
+//import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Getter
 public class CreateTransactionCommand {
 
-    @TargetAggregateIdentifier
+    //@TargetAggregateIdentifier
     private final String transactionId;
     private final double accountId;
     private final double amount;

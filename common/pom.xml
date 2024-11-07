@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.salapp.bank</groupId>
     <artifactId>common</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.2</version>
     <name>common</name>
     <description>common</description>
     <packaging>jar</packaging>
@@ -19,7 +19,7 @@
         <repository>
             <id>nexus</id>
             <name>Releases</name>
-            <url>http://localhost:8099/repository/maven-releases</url>
+            <url>http://localhost:8099/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus</id>

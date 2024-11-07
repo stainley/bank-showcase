@@ -1,7 +1,7 @@
 package com.salapp.bank.transactionservice.handler;
 
 import com.salapp.bank.transactionservice.event.TransactionCreatedEvent;
-import org.axonframework.eventhandling.EventHandler;
+//import org.axonframework.eventhandling.EventHandler;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class TransactionEventHandler {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @EventHandler
+    //@EventHandler
     public void on(TransactionCreatedEvent event) {
         kafkaTemplate.send("transaction-event", event.getTransactionId());
     }

@@ -1,9 +1,9 @@
-spring:
-  cloud:
-    discovery:
-      client:
-        simple:
-          local:
-            uri: http://config-server:8888
-  application:
-    name: discovery-server
+#pring:
+#  cloud:
+#    discovery:
+#      client:
+#        simple:
+#          local:
+#            uri: http://config-server:8888
+#  application:
+#    name: discovery-server
